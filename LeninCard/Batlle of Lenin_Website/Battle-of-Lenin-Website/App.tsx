@@ -4,7 +4,6 @@ import Home from './components/Home';
 import About from './components/About';
 import Development from './components/Development';
 import News from './components/News';
-import Contact from './components/Contact';
 import Footer from './components/Footer';
 import GuidePage from './components/GuidePage';
 import QuizPage from './components/QuizPage';
@@ -68,7 +67,6 @@ const App: React.FC = () => {
         <About />
         <Development />
         <News />
-        <Contact />
       </main>
       <Footer />
     </div>
