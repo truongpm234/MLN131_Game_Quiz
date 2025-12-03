@@ -26,29 +26,23 @@ const shuffleArray = <T,>(array: T[]): T[] => {
 
 const CARD_IMAGE_FILES = [
   'card 1.png',
-  'card 2.jpg',
+  'card 2.png',
   'card 3.png',
-  'card 4.jpg',
+  'card 4.png',
   'card 5.png',
-  'card 6.jpg',
+  'card 6.png',
   'card 7.png',
   'card 8.png',
   'card 9.png',
-  'card 10.jpg',
-  'card 11.jpg',
-  'card 12.jpg',
+  'card 10.png',
+  'card 11.png',
+  'card 12.png',
   'card 13.png',
-  'card 14.jpg',
-  'card 15.jpg',
-  'card 16.jpg',
-  'card 17.jpg',
+  'card 14.png',
+  'card 15.png',
+  'card 16.png',
+  'card 17.png',
   'card 18.png',
-  'card 19.jpg',
-  'card 20.png',
-  'card 21.jpg',
-  'card 22.png',
-  'card 23.jpg',
-  'card 24.jpg',
 ];
 const CARD_IMAGE_PATHS = CARD_IMAGE_FILES.map((name) => `/images/${encodeURIComponent(name)}`);
 
@@ -147,7 +141,7 @@ const App: React.FC = () => {
   }, [view, focusedCard, playBackgroundAudio, stopBackgroundAudio]);
   useEffect(() => () => stopBackgroundAudio(), [stopBackgroundAudio]);
 
-  const CARD_COUNT = 12; // Number of pairs (24 cards total)
+  const CARD_COUNT = 9; // Number of pairs (24 cards total)
 
   const buildPairsFromQuiz = useCallback(
     (count: number): QAPair[] => {

@@ -36,7 +36,7 @@ const CARD_IMAGE_META: Record<
     description:
       'Tập hợp người ổn định, hình thành lâu dài trong lịch sử, có chung ngôn ngữ, lãnh thổ, đời sống kinh tế và bản sắc văn hóa.',
   },
-  'card 2.jpg': {
+  'card 2.png': {
     title: 'Đặc trưng Dân tộc (Phần I-2)',
     description:
       'Gồm các đặc trưng: Cộng đồng về ngôn ngữ, lãnh thổ, kinh tế và văn hóa, tâm lý, ý thức tự giác dân tộc.',
@@ -47,7 +47,7 @@ const CARD_IMAGE_META: Record<
     description:
       'Quan điểm về giải quyết vấn đề dân tộc trong thời kỳ quá độ lên Chủ nghĩa Xã hội, nhấn mạnh quyền bình đẳng và đoàn kết dân tộc.',
   },
-  'card 4.jpg': {
+  'card 4.png': {
     title: 'Nội dung Cương lĩnh Dân tộc',
     description:
       'Ba nội dung cơ bản: Các dân tộc hoàn toàn bình đẳng; Các dân tộc được quyền tự quyết; Liên hiệp công nhân tất cả các dân tộc.',
@@ -58,7 +58,7 @@ const CARD_IMAGE_META: Record<
     description:
       'Đặc điểm nổi bật: Cộng đồng 54 dân tộc anh em, có sự đan xen sinh sống, cùng chung lòng yêu nước, đoàn kết và phát triển.',
   },
-  'card 6.jpg': {
+  'card 6.png': {
     title: 'Dân tộc đa số (Kinh) và thiểu số',
     description:
       'Sự khác biệt về dân số, trình độ phát triển kinh tế - xã hội giữa nhóm dân tộc đa số (Kinh) và các dân tộc thiểu số.',
@@ -78,17 +78,17 @@ const CARD_IMAGE_META: Record<
     description:
       'Tôn giáo còn tồn tại lâu dài, là nhu cầu tinh thần của một bộ phận nhân dân. Đảng, Nhà nước tôn trọng quyền tự do tín ngưỡng, không tín ngưỡng.',
   },
-  'card 10.jpg': {
+  'card 10.png': {
     title: 'Chính sách Tôn giáo',
     description:
       'Chính sách đoàn kết đồng bào có đạo và không có đạo, phát huy giá trị văn hóa, đạo đức tốt đẹp của các tôn giáo, ngăn chặn lợi dụng tôn giáo.',
   },
-  'card 11.jpg': {
+  'card 11.png': {
     title: 'Mối quan hệ Dân tộc - Tôn giáo',
     description:
       'Mối quan hệ phức tạp, đan xen. Vấn đề dân tộc và tôn giáo thường gắn liền với nhau trong quá trình xây dựng Chủ nghĩa Xã hội.',
   },
-  'card 12.jpg': {
+  'card 12.png': {
     title: 'Liên minh Công nông',
     description:
       'Nền tảng của khối đại đoàn kết toàn dân tộc, dưới sự lãnh đạo của Đảng Cộng sản, nhằm xây dựng thành công Chủ nghĩa Xã hội.',
@@ -99,7 +99,7 @@ const CARD_IMAGE_META: Record<
     description:
       'Đảm bảo quyền lợi và nghĩa vụ ngang nhau giữa các dân tộc, xóa bỏ mọi sự kì thị, áp bức dân tộc, bất kể dân tộc đa số hay thiểu số.',
   },
-  'card 14.jpg': {
+  'card 14.png': {
     title: 'Nguyên tắc Tự quyết Dân tộc',
     description:
       'Quyền làm chủ vận mệnh của dân tộc mình, tự quyết định con đường phát triển. Lưu ý: Không bao gồm quyền ly khai thành quốc gia riêng biệt.',
@@ -109,7 +109,7 @@ const CARD_IMAGE_META: Record<
     description:
       'Thực hiện bình đẳng, đoàn kết, tương trợ giữa các dân tộc, cùng nhau phát triển và bảo vệ Tổ quốc Việt Nam Xã hội Chủ nghĩa.',
   },
-  'card 16.jpg': {
+  'card 16.png': {
     title: 'Các thế lực lợi dụng Dân tộc/Tôn giáo',
     description:
       'Cảnh giác và đấu tranh kiên quyết với âm mưu, thủ đoạn của các thế lực thù địch lợi dụng vấn đề dân tộc, tôn giáo để gây chia rẽ, chống phá cách mạng.',
@@ -119,11 +119,28 @@ const CARD_IMAGE_META: Record<
     description:
       'Tôn trọng và bảo hộ quyền tự do tín ngưỡng, tôn giáo và quyền không tín ngưỡng, tôn giáo của mọi công dân. Mọi tôn giáo đều bình đẳng trước pháp luật.',
   },
-  'card 18.jpg': {
+  'card 18.png': {
     title: 'Phát huy Bản sắc Văn hóa',
     description:
       'Chính sách bảo tồn và phát huy những giá trị văn hóa, phong tục, tập quán tốt đẹp, tiếng nói, chữ viết của từng dân tộc thiểu số.',
   },
+};
+
+// Đường dẫn mặc định nếu lấy từ public/images.
+const getCardImage = (src: string | undefined) => {
+  if (!src) return COVER_IMAGE;
+  // Nếu src đã bắt đầu bằng '/', giữ nguyên
+  if (src.startsWith('/')) return src;
+  // Nếu src không bắt đầu bằng '/', ưu tiên lấy từ alias @images.
+  try {
+    // import.meta.glob chỉ hoạt động khi chạy dev/build Vite với asset trong src, KHÔNG dùng cho public/images.
+    // import images only with @images alias (khi đã setup alias)
+    // Nếu muốn import runtime qua @images/card 1.png, cần setup alias trong vite.config và tsconfig
+    // Nếu không setup, vẫn fallback về /images/
+    return require(`@images/${src}`);
+  } catch {
+    return `/images/${src}`;
+  }
 };
 
 const CardShowcase: React.FC<CardShowcaseProps> = ({
@@ -452,6 +469,22 @@ const CardShowcase: React.FC<CardShowcaseProps> = ({
         {showQuestionForm && (
           <div className="fixed inset-0 flex items-center justify-center p-4">
             <div className="w-full max-w-4xl bg-[#080808] border border-white/10 rounded-3xl shadow-2xl text-white p-6 space-y-6 relative">
+              {/* >>> Hình nhỏ căn giữa phía trên câu hỏi <<< */}
+              <div className="w-full flex justify-center mb-4">
+                {(card.imageSrc && card.imageSrc !== "") ? (
+                  <img
+                    src={getCardImage(card.imageSrc)}
+                    alt={card.content}
+                    className="h-24 max-w-xs object-contain rounded-xl border border-white/10 bg-black"
+                    onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = COVER_IMAGE; e.currentTarget.alt = 'Không có hình ảnh'; }}
+                    draggable={false}
+                  />
+                ) : (
+                  <div className="h-24 w-36 flex items-center justify-center bg-gray-800 text-gray-300 rounded-xl border border-white/10">
+                    Không có hình ảnh
+                  </div>
+                )}
+              </div>
               <div className="space-y-2">
                 <p className="text-xs uppercase tracking-[0.35em] text-red-300">
                   Trắc nghiệm tập thể
