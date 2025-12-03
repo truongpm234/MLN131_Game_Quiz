@@ -18,8 +18,7 @@ const navLinks: NavLink[] = [
   { href: '#home', label: 'Home' },
   { href: '#about', label: 'Giới thiệu' },
   { href: '#development', label: 'Phát triển' },
-  { href: '#news', label: 'Tin tức' },
-  { href: '#contact', label: 'Đăng ký' },
+  { href: '#news', label: 'Nội dung' },
   { href: 'resources', label: 'Tài Nguyên' },
   { href: 'guide', label: 'Hướng dẫn' }
 ];
@@ -113,13 +112,6 @@ const Navbar: React.FC<NavbarProps> = ({ navigate, theme, toggleTheme }) => {
 
           {/* Actions */}
           <div className="flex items-center gap-4">
-            <a
-              href="#contact"
-              onClick={(e) => handleLinkClick(e, '#contact')}
-              className="hidden lg:inline-flex items-center justify-center rounded-full border border-brand-gold/40 bg-brand-gold/90 px-5 py-2 text-sm font-semibold text-gray-900 shadow-brand-gold/40 shadow-lg transition-all duration-300 hover:bg-amber-400 hover:shadow-xl"
-            >
-              Đăng ký sớm
-            </a>
             <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
           </div>
 
@@ -153,13 +145,6 @@ const Navbar: React.FC<NavbarProps> = ({ navigate, theme, toggleTheme }) => {
                 {link.label}
               </a>
             ))}
-            <a
-              href="#contact"
-              className="w-[85%] rounded-full border border-brand-gold/30 bg-brand-gold/90 py-3 text-center text-sm font-semibold text-gray-900 shadow-lg transition-all duration-300 hover:bg-amber-400"
-              onClick={(e) => handleLinkClick(e, '#contact')}
-            >
-              Đăng ký sớm
-            </a>
           </div>
         </div>
       )}
