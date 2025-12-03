@@ -36,13 +36,6 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ date, title, description, i
 );
 
 const Development: React.FC = () => {
-  const teamMembers = [
-    { name: 'Nguyễn Nhật Chương', role: 'Project Lead / Full Stacks', img: '/developer/NguyenNhatChuong.jpg'},
-    { name: 'Mai Hải Nam', role: 'Data Analyst / Back-End', img: '/developer/MaiHaiNam.jpg'},
-    { name: 'Trương Tuấn Vũ', role: 'UI/UX Designer / Event Analysis', img: '/developer/TruongTuanVu.jpg'},
-    { name: 'Lê Viết Hoàng Hiệp', role: 'Testing / Presentation Content', img: '/developer/LeVietHoangHoangHiep.jpg'}
-  ];
-
   return (
     <section id="development" className="relative overflow-hidden bg-[#05070d] py-24 text-gray-100">
       <div className="pointer-events-none absolute inset-0">
@@ -63,44 +56,13 @@ const Development: React.FC = () => {
 
         <div className="relative mt-16">
           <div className="absolute left-[3.2rem] top-0 hidden h-full w-px bg-gradient-to-b from-brand-gold/60 via-white/10 to-transparent sm:block"></div>
-          <TimelineItem date="03/11/2025" title="Ý tưởng" description="Hình thành khái niệm “Battle Of LeNin”, xác định triết lý cốt lõi và cấu trúc chiến lược cho trò chơi." icon={<IdeaIcon />} />
-          <TimelineItem date="05/11/2025" title="Thiết kế" description="Xây dựng luật chơi, kiến trúc trải nghiệm người dùng và hệ thống nhân vật mang đậm bản sắc triết học." icon={<DesignIcon />} />
-          <TimelineItem date="07/11/2025" title="Thử nghiệm nội bộ" description="Chơi thử trong nhóm nhỏ, thu thập dữ liệu phản hồi, điều chỉnh nhịp độ câu hỏi và trải nghiệm vận hành." icon={<TestIcon />} />
-          <TimelineItem date="10/11/2025" title="Bản Beta" description="Mở đăng ký sớm cho cộng đồng, mời thử nghiệm và hoàn thiện hệ thống phản hồi trực tiếp." icon={<BetaIcon />} />
-          <TimelineItem date="13/11/2025" title="Ra mắt chính thức" description="Phát hành bản hoàn chỉnh trên nền tảng web, giới thiệu chiến dịch lan tỏa cộng đồng tri thức." icon={<LaunchIcon />} isLast={true} />
+          <TimelineItem date="03/12/2025" title="Ý tưởng" description="Hình thành khái niệm “Lenin Card”, xác định triết lý cốt lõi và cấu trúc chiến lược cho trò chơi." icon={<IdeaIcon />} />
+          <TimelineItem date="05/12/2025" title="Thiết kế" description="Xây dựng luật chơi, kiến trúc trải nghiệm người dùng và hệ thống nhân vật mang đậm bản sắc triết học." icon={<DesignIcon />} />
+          <TimelineItem date="07/12/2025" title="Thử nghiệm nội bộ" description="Chơi thử trong nhóm nhỏ, thu thập dữ liệu phản hồi, điều chỉnh nhịp độ câu hỏi và trải nghiệm vận hành." icon={<TestIcon />} />
+          <TimelineItem date="10/12/2025" title="Bản Beta" description="Mở đăng ký sớm cho cộng đồng, mời thử nghiệm và hoàn thiện hệ thống phản hồi trực tiếp." icon={<BetaIcon />} />
+          <TimelineItem date="13/12/2025" title="Ra mắt chính thức" description="Phát hành bản hoàn chỉnh trên nền tảng web, giới thiệu chiến dịch lan tỏa cộng đồng tri thức." icon={<LaunchIcon />} isLast={true} />
         </div>
 
-        <div className="relative mt-24">
-          <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
-            <h3 className="text-3xl font-semibold text-white">Đội ngũ phát triển</h3>
-            <p className="mt-4 max-w-2xl text-base text-gray-300">
-              Một tập thể trẻ trung, đam mê và không ngừng đặt câu hỏi. Chúng tôi kết hợp kỹ năng công nghệ, dữ liệu và tư duy sáng tạo để tạo nên trải nghiệm khác biệt.
-            </p>
-          </div>
-
-          <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-            {teamMembers.map((member) => (
-              <div
-                key={member.name}
-                className="group relative overflow-hidden rounded-[28px] border border-white/10 bg-white/10 p-6 text-center backdrop-blur-xl shadow-[0_25px_60px_-20px_rgba(0,0,0,0.65)] transition-transform duration-500 hover:-translate-y-2 hover:border-brand-gold/40 hover:shadow-brand-gold/30"
-              >
-                <div className="relative mx-auto h-28 w-28 overflow-hidden rounded-full border border-white/20 shadow-[0_20px_50px_-25px_rgba(0,0,0,0.7)] transition-transform duration-500 group-hover:scale-105">
-                  <img
-                    src={
-                      member.img
-                        ? member.img
-                        : `https://ui-avatars.com/api/?name=${member.name.replace(' ', '+')}&background=16a34a&color=fff&size=128`
-                    }
-                    className="h-full w-full object-cover"
-                    alt={`Ảnh đại diện của ${member.name}`}
-                  />
-                </div>
-                <h4 className="mt-6 text-lg font-semibold text-white">{member.name}</h4>
-                <p className="mt-2 text-sm uppercase tracking-[0.25em] text-brand-gold/80">{member.role}</p>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   );

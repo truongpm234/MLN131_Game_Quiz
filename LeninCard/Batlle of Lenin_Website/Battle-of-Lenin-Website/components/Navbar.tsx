@@ -84,11 +84,11 @@ const Navbar: React.FC<NavbarProps> = ({ navigate, theme, toggleTheme }) => {
           >
             <img
               src="/logo/logo.png"
-              alt="Battle Of LeNin Logo"
+              alt="Lenin Card Logo"
               className="w-12 h-12 object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.45)] transition-transform duration-300 group-hover:scale-110"
             />
             <span className="tracking-[0.3em]">
-              Battle Of <span className="text-brand-gold">LeNin</span>
+              Lenin  <span className="text-brand-gold">Card</span>
             </span>
           </a>
 

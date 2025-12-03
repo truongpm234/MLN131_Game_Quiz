@@ -23,7 +23,7 @@ const Contact: React.FC = () => {
         try {
             const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
             
-            const prompt = `Một người dùng tên là "${name}" với email "${email}" vừa đăng ký trải nghiệm sớm trò chơi "Battle Of LeNin" của chúng tôi. Hãy soạn một email xác nhận thân thiện và chuyên nghiệp gửi cho họ. Cảm ơn họ đã quan tâm, xác nhận rằng họ đã được ghi danh vào danh sách chờ bản Beta, và cho họ biết rằng chúng tôi sẽ sớm liên hệ lại với thông tin chi tiết. Phản hồi phải hoàn toàn bằng tiếng Việt. Bắt đầu bằng lời chào đến ${name}.`;
+            const prompt = `Một người dùng tên là "${name}" với email "${email}" vừa đăng ký trải nghiệm sớm trò chơi "Lenin Card" của chúng tôi. Hãy soạn một email xác nhận thân thiện và chuyên nghiệp gửi cho họ. Cảm ơn họ đã quan tâm, xác nhận rằng họ đã được ghi danh vào danh sách chờ bản Beta, và cho họ biết rằng chúng tôi sẽ sớm liên hệ lại với thông tin chi tiết. Phản hồi phải hoàn toàn bằng tiếng Việt. Bắt đầu bằng lời chào đến ${name}.`;
 
             const response = await ai.models.generateContent({
                 model: 'gemini-2.5-flash',
@@ -55,7 +55,7 @@ const Contact: React.FC = () => {
             Đăng ký &amp; <span className="text-brand-gold">Liên hệ</span>
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-base text-gray-300">
-            Gửi đăng ký trải nghiệm sớm hoặc liên lạc trực tiếp với đội ngũ phát triển để cùng lan tỏa giá trị triết học của Battle Of LeNin.
+            Gửi đăng ký trải nghiệm sớm hoặc liên lạc trực tiếp với đội ngũ phát triển để cùng lan tỏa giá trị triết học của Lenin Card.
           </p>
         </div>
 
@@ -70,7 +70,7 @@ const Contact: React.FC = () => {
                 </span>
               </div>
               <p className="mt-4 text-sm text-gray-300/90">
-                Điền thông tin để đứng trong hàng ngũ tiên phong khám phá những phiên bản mới nhất của Battle Of LeNin.
+                Điền thông tin để đứng trong hàng ngũ tiên phong khám phá những phiên bản mới nhất của Lenin Card.
               </p>
 
               <form onSubmit={handleSubmit} className="mt-8 space-y-5">
@@ -150,7 +150,7 @@ const Contact: React.FC = () => {
                   </p>
                   <a href="https://www.facebook.com/meiinamm/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-gray-200 hover:text-brand-gold transition-colors">
                     <FacebookIcon className="h-5 w-5 text-brand-gold" />
-                    <span>Facebook Battle Of LeNin</span>
+                    <span>Facebook Lenin Card</span>
                   </a>
                   <a href="https://discord.gg/gtg2XhRu" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-gray-200 hover:text-brand-gold transition-colors">
                     <DiscordIcon className="h-5 w-5 text-brand-gold" />

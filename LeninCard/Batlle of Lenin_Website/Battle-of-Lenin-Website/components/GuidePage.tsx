@@ -21,7 +21,7 @@ const GuidePage: React.FC<GuidePageProps> = ({ navigate, theme, toggleTheme }) =
                 <GameGuide />
             </main>
              <footer className="text-center py-8 text-gray-500 dark:text-gray-500">
-                &copy; {new Date().getFullYear()} Battle Of LeNin. All rights reserved.
+                &copy; {new Date().getFullYear()} Lenin Card. All rights reserved.
             </footer>
         </div>
     );

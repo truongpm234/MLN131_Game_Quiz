@@ -28,7 +28,7 @@ const About: React.FC = () => {
         <div className="text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.5em] text-brand-gold/70">Guidebook</span>
           <h2 className="mt-6 text-4xl font-extrabold text-white md:text-5xl">
-            Hướng Dẫn Chơi <span className="text-brand-gold">Battle Of LeNin</span>
+            Hướng Dẫn Chơi <span className="text-brand-gold">Lenin Card</span>
           </h2>
           <p className="mx-auto mt-4 max-w-3xl text-base text-gray-300 md:text-lg">
             Nắm rõ mục tiêu, cách chơi và chế độ thi đấu để tận hưởng hành trình ôn luyện FA25 đầy cảm hứng.
@@ -40,7 +40,7 @@ const About: React.FC = () => {
             <article className="rounded-[32px] border border-white/10 bg-white/5 p-10 backdrop-blur-xl shadow-[0_30px_80px_-25px_rgba(0,0,0,0.7)]">
               <h3 className="text-2xl font-semibold text-brand-gold">Câu chuyện hình thành</h3>
               <p className="mt-4 text-base leading-relaxed text-gray-200/85">
-                <strong>Battle Of LeNin</strong> ra đời từ mong muốn tạo nên một sân chơi nơi chiến lược, tư duy phản biện và tinh
+                <strong>Lenin Card</strong> ra đời từ mong muốn tạo nên một sân chơi nơi chiến lược, tư duy phản biện và tinh
                 thần đồng đội được bồi đắp qua từng ván đấu.
               </p>
               <p className="mt-4 text-base leading-relaxed text-gray-200/85">
@@ -53,7 +53,7 @@ const About: React.FC = () => {
               <article className="rounded-[28px] border border-white/10 bg-white/[0.08] p-8 backdrop-blur-xl shadow-[0_20px_50px_-25px_rgba(0,0,0,0.65)]">
                 <h3 className="text-xl font-semibold text-brand-gold">Tầm nhìn</h3>
                 <p className="mt-3 text-sm leading-relaxed text-gray-200/80">
-                  Nuôi dưỡng cộng đồng học tập tương tác, đưa Battle Of LeNin trở thành biểu tượng của trò chơi chiến lược trí
+                  Nuôi dưỡng cộng đồng học tập tương tác, đưa Lenin Card trở thành biểu tượng của trò chơi chiến lược trí
                   tuệ tại Việt Nam.
                 </p>
               </article>
@@ -73,7 +73,7 @@ const About: React.FC = () => {
               <span className="absolute inset-0 bg-gradient-to-br from-brand-gold/15 via-transparent to-brand-gold/5 opacity-60 transition-opacity duration-500 group-hover:opacity-80"></span>
               <img
                 src="/background/LeninBattle.jpg"
-                alt="Battle Of LeNin Game Board"
+                alt="Lenin Card Game Board"
                 className="relative w-full rounded-[28px] object-cover transition-transform duration-700 group-hover:scale-[1.03]"
               />
               <div className="relative mt-6 space-y-3 text-sm text-gray-200/85">

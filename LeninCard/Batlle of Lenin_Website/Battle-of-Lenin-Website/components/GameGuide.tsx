@@ -77,7 +77,7 @@ const GameGuide: React.FC = () => {
         <div className="mb-16 text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.5em] text-brand-gold/70">Guidebook</span>
           <h2 className="mt-6 text-4xl font-extrabold uppercase text-white">
-            Hướng Dẫn Chơi <span className="text-brand-gold">Battle Of LeNin</span>
+            Hướng Dẫn Chơi <span className="text-brand-gold">Lenin Card</span>
           </h2>
           <p className="mx-auto mt-4 max-w-3xl text-base text-gray-300">
             Lật thẻ, trả lời nhanh và tích lũy điểm số để sẵn sàng cho hành trình FA25 tràn đầy cảm hứng.
