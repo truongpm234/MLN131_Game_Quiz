@@ -40,7 +40,7 @@ const Home: React.FC<HomeProps> = ({ navigate }) => {
               [text-shadow:0_4px_8px_rgba(0,0,0,0.6)]"
             >
               <span className="block bg-clip-text text-transparent bg-gradient-to-r from-brand-gold via-amber-300 to-amber-200">
-                Battle Of LeNin
+                Lenin Card
               </span>
               <span className="block mt-4 text-4xl md:text-5xl font-semibold text-white tracking-normal">
                 Chơi để chinh phục đỉnh cao tri thức!
@@ -50,7 +50,7 @@ const Home: React.FC<HomeProps> = ({ navigate }) => {
             <div className="h-1 w-24 rounded-full bg-gradient-to-r from-brand-gold/90 to-amber-400/70 shadow-lg shadow-brand-gold/40"></div>
 
             <p className="text-lg md:text-xl text-gray-200/90 dark:text-gray-300 max-w-2xl leading-relaxed">
-              Chào mừng bạn đến với <strong>Battle Of LeNin</strong> – nơi tri thức gặp chiến lược.
+              Chào mừng bạn đến với <strong>Lenin Card</strong> – nơi tri thức gặp chiến lược.
               Mỗi nước đi là một luận điểm, mỗi chiến thắng là một tuyên ngôn mới của tư duy. Khai mở
               tầm nhìn, suy luận sâu sắc và kiến tạo con đường của riêng bạn.
             </p>

@@ -19,11 +19,11 @@ const Footer: React.FC = () => {
           >
             <img
               src="/logo/logo.png"
-              alt="Battle Of LeNin Logo"
+              alt="Lenin Card Logo"
               className="h-14 w-14 object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.6)] transition-transform duration-300 group-hover:scale-110"
             />
             <span className="text-sm font-semibold uppercase tracking-[0.4em] text-white">
-              Battle Of <span className="text-brand-gold">LeNin</span>
+              LENIN  <span className="text-brand-gold">CARD</span>
             </span>
           </a>
 
@@ -44,7 +44,7 @@ const Footer: React.FC = () => {
           </div>
 
           <div className="mt-12 text-xs uppercase tracking-[0.35em] text-brand-gold/70">
-            &copy; {new Date().getFullYear()} Battle Of LeNin • All rights reserved.
+            &copy; {new Date().getFullYear()} Lenin Card • All rights reserved.
           </div>
         </div>
       </div>
