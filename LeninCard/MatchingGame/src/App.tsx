@@ -1,4 +1,3 @@
-// SỬA 1: Bỏ "React" khỏi import vì không dùng trực tiếp (chỉ dùng các hook)
 import { useState, useEffect, useRef } from 'react';
 
 // --- CẤU HÌNH DATA (GIỮ NGUYÊN) ---
@@ -73,6 +72,7 @@ const RAW_DATA = [
 // --- LOGIC GAME & UTILS ---
 const generateFullData = () => {
   let data = [...RAW_DATA];
+  // Nhân bản dữ liệu để đủ cho 9 trang (9 * 7 = 63 cặp)
   while (data.length < 63) {
     data = [...data, ...RAW_DATA];
   }
@@ -109,10 +109,16 @@ function App() {
   const [hintedIds, setHintedIds] = useState<Set<number>>(new Set());
   const [isChecked, setIsChecked] = useState(false);
   
-  // SỬA 2: Bỏ biến updateTrigger, chỉ lấy hàm set để force update
   const [, setUpdateTrigger] = useState(0); 
   
-  const [score, setScore] = useState(0);
+  const [score, setScore] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedScore = sessionStorage.getItem('dai_dong_score');
+      return savedScore ? parseInt(savedScore, 10) : 0;
+    }
+    return 0;
+  });
+
   const [pageScore, setPageScore] = useState(0);
   const [isPageFinished, setIsPageFinished] = useState(false);
   const [isGameFinished, setIsGameFinished] = useState(false);
@@ -122,11 +128,14 @@ function App() {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    sessionStorage.setItem('dai_dong_score', score.toString());
+  }, [score]);
+
+  useEffect(() => {
     const data = generateFullData();
     setAllPairs(data);
     loadPage(0, data);
     
-    // Add resize listener to update lines
     const handleResize = () => setUpdateTrigger(prev => prev + 1);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -166,6 +175,8 @@ function App() {
           createConnection(card.id, selectedRight.id);
           setSelectedLeft(null);
           setSelectedRight(null);
+          // SỬA ĐỔI: Xóa gợi ý khi đã nối xong (dù đúng hay sai)
+          setHintedIds(new Set());
         }
       }
     } else {
@@ -177,6 +188,8 @@ function App() {
           createConnection(selectedLeft.id, card.id);
           setSelectedLeft(null);
           setSelectedRight(null);
+          // SỬA ĐỔI: Xóa gợi ý khi đã nối xong
+          setHintedIds(new Set());
         }
       }
     }
@@ -200,11 +213,19 @@ function App() {
     setCheckedConnections(checked);
     setIsChecked(true);
     
-    const correctCount = checked.filter(c => c.isCorrect).length;
-    const points = correctCount * 100;
+    // Logic tính điểm: Đúng +100, Sai không trừ
+    let points = 0;
+    checked.forEach(c => {
+        if (c.isCorrect) points += 100;
+        // else points -= 0; // Không trừ điểm nếu sai
+    });
+
     setPageScore(points);
+    // Cộng dồn vào tổng điểm
     setScore(prev => prev + points);
     
+    // Chỉ hoàn thành trang nếu đúng hết
+    const correctCount = checked.filter(c => c.isCorrect).length;
     if (correctCount === currentPairs.length) {
       setTimeout(() => setIsPageFinished(true), 800);
     }
@@ -212,25 +233,26 @@ function App() {
 
   const handleHint = () => {
     if (isChecked) return;
-    setScore(prev => Math.max(0, prev - 50));
+    
+    // SỬA ĐỔI: Chỉ cho phép gợi ý khi đã chọn 1 câu hỏi (bên trái)
+    if (!selectedLeft) {
+        alert("Vui lòng chọn một câu hỏi (bên trái) để sử dụng gợi ý!");
+        return;
+    }
+
+    setScore(prev => prev - 50);
     const newHintedIds = new Set(hintedIds);
     
-    connections.forEach(conn => {
-      const correctAnswerId = conn.leftId;
-      const wrongAnswers = rightCards
-        .filter(card => card.id !== correctAnswerId && !newHintedIds.has(card.id))
-        .slice(0, 5);
-      wrongAnswers.forEach(card => newHintedIds.add(card.id));
-    });
-    
-    if (connections.length === 0 && selectedLeft) {
-      const wrongAnswers = rightCards
-        .filter(card => card.id !== selectedLeft.id)
+    // SỬA ĐỔI: Logic gợi ý mới - Tìm 5 đáp án sai của câu hỏi ĐANG CHỌN để làm mờ
+    const wrongAnswers = rightCards
+        .filter(card => 
+             card.id !== selectedLeft.id && // Không phải đáp án đúng
+             !hasConnection(card.id, 'right') // Chưa bị nối
+        )
         .sort(() => Math.random() - 0.5)
         .slice(0, 5);
-      wrongAnswers.forEach(card => newHintedIds.add(card.id));
-    }
     
+    wrongAnswers.forEach(card => newHintedIds.add(card.id));
     setHintedIds(newHintedIds);
   };
 
@@ -245,12 +267,16 @@ function App() {
   };
 
   const handleRetryPage = () => {
-    setScore(prev => Math.max(0, prev - pageScore)); 
+    setScore(prev => prev - pageScore); 
     loadPage(currentPage, allPairs);
   };
 
   const handleRestart = () => {
-    window.location.reload();
+    const newData = generateFullData();
+    setAllPairs(newData);
+    loadPage(0, newData);
+    setCurrentPage(0);
+    setIsGameFinished(false);
   };
 
   const renderConnections = () => {
@@ -269,19 +295,17 @@ function App() {
           const leftRect = leftEl.getBoundingClientRect();
           const rightRect = rightEl.getBoundingClientRect();
           
-          // Connect from the dots - Corrected logic to ensure line stays exactly at anchor
           const x1 = leftRect.right - containerRect.left; 
           const y1 = leftRect.top + leftRect.height / 2 - containerRect.top;
           const x2 = rightRect.left - containerRect.left;
           const y2 = rightRect.top + rightRect.height / 2 - containerRect.top;
           
-          // Tính toán độ cong - Đảm bảo đường nối luôn hiện rõ kể cả khi nằm ngang
           const distanceX = Math.abs(x2 - x1);
           const controlOffset = Math.min(distanceX * 0.6, 120); 
 
           const color = isChecked 
-            ? (conn.isCorrect ? '#10b981' : '#ef4444') // Emerald or Red
-            : '#f59e0b'; // Amber for active
+            ? (conn.isCorrect ? '#10b981' : '#ef4444') 
+            : '#f59e0b'; 
           
           const key = `${conn.leftId}-${conn.rightId}`;
 
@@ -342,12 +366,10 @@ function App() {
         
         {/* Background Decor */}
         <div className="fixed inset-0 pointer-events-none -z-10">
-           {/* Ảnh nền làm mờ - Tăng opacity để rõ hơn */}
            <div 
              className="absolute inset-0 bg-cover bg-center bg-no-repeat blur-md scale-105 opacity-80"
              style={{ backgroundImage: "url('/img.jpg')" }} 
            ></div>
-           {/* Lớp phủ màu nhẹ - Giảm opacity để ảnh nền hiện ra */}
            <div className="absolute inset-0 bg-gradient-to-br from-[#fdfaf6]/80 via-[#fdfaf6]/60 to-[#fdfaf6]/80"></div>
         </div>
         
@@ -379,7 +401,7 @@ function App() {
              </a>
             <button onClick={handleRestart} className="px-10 py-4 bg-stone-800 hover:bg-stone-900 text-white font-bold rounded-full shadow-lg transition-all hover:scale-105 hover:shadow-stone-900/20 flex items-center justify-center gap-2">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-              Chơi Lại
+              Chơi Tiếp (Giữ điểm)
             </button>
           </div>
         </div>
@@ -393,12 +415,10 @@ function App() {
       
       {/* Background Decor */}
       <div className="fixed inset-0 pointer-events-none -z-10">
-         {/* Ảnh nền làm mờ - Tăng opacity để rõ hơn */}
          <div 
            className="absolute inset-0 bg-cover bg-center bg-no-repeat blur-md scale-105 opacity-80"
            style={{ backgroundImage: "url('/img.jpg')" }} 
          ></div>
-         {/* Lớp phủ màu nhẹ - Giảm opacity để ảnh nền hiện ra */}
          <div className="absolute inset-0 bg-gradient-to-br from-[#fdfaf6]/80 via-[#fdfaf6]/60 to-[#fdfaf6]/80"></div>
       </div>
 
@@ -471,7 +491,9 @@ function App() {
               <div className="h-10 w-px bg-stone-200"></div>
               <div className="flex flex-col">
                  <span className="text-[10px] uppercase text-stone-400 tracking-widest font-bold mb-1">Thưởng</span>
-                 <span className="text-3xl font-bold text-amber-600">+{pageScore}</span>
+                 <span className={`text-3xl font-bold ${pageScore >= 0 ? 'text-amber-600' : 'text-red-500'}`}>
+                    {pageScore >= 0 ? '+' : ''}{pageScore}
+                 </span>
               </div>
             </div>
             
@@ -510,7 +532,9 @@ function App() {
                 
                 <div className="bg-stone-50 rounded-[2rem] p-5 mb-8 border border-stone-100">
                   <p className="text-xs uppercase tracking-widest text-stone-400 mb-1">Điểm nhận được</p>
-                  <div className="text-5xl font-black text-amber-500">+{pageScore}</div>
+                  <div className={`text-5xl font-black ${pageScore >= 0 ? 'text-amber-500' : 'text-red-500'}`}>
+                    {pageScore >= 0 ? '+' : ''}{pageScore}
+                  </div>
                 </div>
 
                 <div className="flex gap-4">
