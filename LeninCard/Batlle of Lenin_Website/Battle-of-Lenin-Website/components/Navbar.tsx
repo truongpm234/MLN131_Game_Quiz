@@ -82,13 +82,14 @@ const Navbar: React.FC<NavbarProps> = ({ navigate, theme, toggleTheme }) => {
             onClick={(e) => handleLinkClick(e, '#home')}
             className="group flex items-center gap-3 text-2xl font-semibold text-gray-900 dark:text-white uppercase tracking-[0.35em] transition-transform duration-300 hover:scale-[1.02]"
           >
+            {/* Đã sửa: Thêm rounded-full và object-cover */}
             <img
               src="/logo/logo.png"
-              alt="Lenin Card Logo"
-              className="w-12 h-12 object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.45)] transition-transform duration-300 group-hover:scale-110"
+              alt="Đại Đồng Logo"
+              className="w-12 h-12 rounded-full object-cover drop-shadow-[0_10px_20px_rgba(0,0,0,0.45)] transition-transform duration-300 group-hover:scale-110"
             />
-            <span className="tracking-[0.3em]">
-              Lenin  <span className="text-brand-gold">Card</span>
+            <span className="tracking-[0.1em]">
+              Đại <span className="text-brand-gold">Đồng</span>
             </span>
           </a>
 

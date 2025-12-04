@@ -2,7 +2,7 @@ import React from 'react';
 import LinkIcon from './icons/LinkIcon';
 
 const quizResources = [
-    { title: "MLN131 FE Full", url: "https://quizlet.com/vn/1111069962/mln131-fe-flash-cards/" },
+    { title: "Giáo trình MLN131", url: "https://drive.google.com/file/d/15dIsZfZHnAWnshpOfdG_LqvH3cZS7PLS/view?usp=sharing" },
 ];
 
 const ResourceCard: React.FC<{ title: string; url: string }> = ({ title, url }) => (
@@ -41,7 +41,7 @@ const Resources: React.FC = () => {
                     Nguồn Dữ Liệu &amp; <span className="text-brand-gold">Tài Nguyên</span>
                 </h2>
                 <p className="mx-auto mt-4 max-w-3xl text-base text-gray-300">
-                    Kho tư liệu được tuyển chọn để nuôi dưỡng tinh thần triết học và chiến lược của Lenin Card.
+                    Kho tư liệu được tuyển chọn để nuôi dưỡng tinh thần triết học và chiến lược của Đại Đồng.
                 </p>
             </div>
 
@@ -49,7 +49,7 @@ const Resources: React.FC = () => {
                 <div>
                     <h3 className="text-center text-2xl font-semibold text-brand-gold uppercase tracking-[0.3em]">Dữ liệu câu hỏi Quiz</h3>
                     <p className="mx-auto mt-6 max-w-3xl text-center text-sm text-gray-300">
-                        Tất cả dữ liệu câu hỏi trong game "Lenin Card" được tham khảo từ các bộ đề công khai, được tuyển lọc và phân loại kỹ lưỡng nhằm tạo ra trải nghiệm đa chiều và uyên thâm.
+                        Tất cả dữ liệu câu hỏi trong game "Đại Đồng" được tham khảo từ các bộ đề công khai, được tuyển lọc và phân loại kỹ lưỡng nhằm tạo ra trải nghiệm đa chiều và uyên thâm.
                     </p>
                     <div className="mt-8 grid gap-6">
                         {quizResources.map((link, index) => (

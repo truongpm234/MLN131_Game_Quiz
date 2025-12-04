@@ -56,13 +56,11 @@ const Development: React.FC = () => {
 
         <div className="relative mt-16">
           <div className="absolute left-[3.2rem] top-0 hidden h-full w-px bg-gradient-to-b from-brand-gold/60 via-white/10 to-transparent sm:block"></div>
-          <TimelineItem date="03/12/2025" title="Ý tưởng" description="Hình thành khái niệm “Lenin Card”, xác định triết lý cốt lõi và cấu trúc chiến lược cho trò chơi." icon={<IdeaIcon />} />
-          <TimelineItem date="05/12/2025" title="Thiết kế" description="Xây dựng luật chơi, kiến trúc trải nghiệm người dùng và hệ thống nhân vật mang đậm bản sắc triết học." icon={<DesignIcon />} />
-          <TimelineItem date="07/12/2025" title="Thử nghiệm nội bộ" description="Chơi thử trong nhóm nhỏ, thu thập dữ liệu phản hồi, điều chỉnh nhịp độ câu hỏi và trải nghiệm vận hành." icon={<TestIcon />} />
-          <TimelineItem date="10/12/2025" title="Bản Beta" description="Mở đăng ký sớm cho cộng đồng, mời thử nghiệm và hoàn thiện hệ thống phản hồi trực tiếp." icon={<BetaIcon />} />
-          <TimelineItem date="13/12/2025" title="Ra mắt chính thức" description="Phát hành bản hoàn chỉnh trên nền tảng web, giới thiệu chiến dịch lan tỏa cộng đồng tri thức." icon={<LaunchIcon />} isLast={true} />
+          <TimelineItem date="01/12/2025" title="Ý tưởng" description="Hình thành khái niệm “Lenin Card”, xác định triết lý cốt lõi và cấu trúc chiến lược cho trò chơi." icon={<IdeaIcon />} />
+          <TimelineItem date="02/12/2025" title="Thiết kế" description="Xây dựng luật chơi, kiến trúc trải nghiệm người dùng và hệ thống nhân vật mang đậm bản sắc triết học." icon={<DesignIcon />} />
+          <TimelineItem date="04/12/2025" title="Thử nghiệm nội bộ" description="Chơi thử trong nhóm nhỏ, thu thập dữ liệu phản hồi, điều chỉnh nhịp độ câu hỏi và trải nghiệm vận hành." icon={<TestIcon />} />
+          <TimelineItem date="05/12/2025" title="Ra mắt chính thức" description="Phát hành bản hoàn chỉnh trên nền tảng web, giới thiệu chiến dịch lan tỏa cộng đồng tri thức." icon={<LaunchIcon />} isLast={true} />
         </div>
-
       </div>
     </section>
   );

@@ -14,8 +14,7 @@ const Home: React.FC<HomeProps> = ({ navigate }) => {
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-105 transition-transform duration-[4000ms] animate-slow-zoom"
         style={{
-          // Nếu ảnh nằm trong /public/background/background.jpg, nên dùng đường dẫn tuyệt đối:
-          // backgroundImage: "url('/background/background.jpg')",
+          // Nếu ảnh nằm trong /public/background/background.jpg
           backgroundImage: "url('background/background.jpg')",
         }}
       ></div>
@@ -40,7 +39,7 @@ const Home: React.FC<HomeProps> = ({ navigate }) => {
               [text-shadow:0_4px_8px_rgba(0,0,0,0.6)]"
             >
               <span className="block bg-clip-text text-transparent bg-gradient-to-r from-brand-gold via-amber-300 to-amber-200">
-                Lenin Card
+                Đại Đồng
               </span>
               <span className="block mt-4 text-4xl md:text-5xl font-semibold text-white tracking-normal">
                 Chơi để chinh phục đỉnh cao tri thức!
@@ -50,30 +49,45 @@ const Home: React.FC<HomeProps> = ({ navigate }) => {
             <div className="h-1 w-24 rounded-full bg-gradient-to-r from-brand-gold/90 to-amber-400/70 shadow-lg shadow-brand-gold/40"></div>
 
             <p className="text-lg md:text-xl text-gray-200/90 dark:text-gray-300 max-w-2xl leading-relaxed">
-              Chào mừng bạn đến với <strong>Lenin Card</strong> – nơi tri thức gặp chiến lược.
+              Chào mừng bạn đến với <strong>Đại Đồng</strong> – nơi tri thức gặp chiến lược.
               Mỗi nước đi là một luận điểm, mỗi chiến thắng là một tuyên ngôn mới của tư duy. Khai mở
               tầm nhìn, suy luận sâu sắc và kiến tạo con đường của riêng bạn.
             </p>
 
-            {/* Nút hành động */}
-            <div className="flex flex-wrap items-center gap-4">
+            {/* --- KHU VỰC BUTTONS (ĐÃ SỬA) --- */}
+            {/* Sử dụng flex-wrap để trên mobile nếu màn hình quá nhỏ nó sẽ tự xuống dòng, còn desktop sẽ nằm ngang */}
+            <div className="mt-8 flex flex-wrap items-center gap-4">
+              {/* Nút Quiz Game */}
               <a
-                href="https://battle-of-lenin.vercel.app/"
+                href="https://mln131-quiz-game.vercel.app/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-brand-gold hover:bg-amber-500 text-gray-900 font-bold py-3 px-8 rounded-full text-lg transition-all duration-300 ease-in-out hover:scale-105 shadow-lg shadow-brand-gold/40"
+                className="bg-brand-gold hover:bg-amber-500 text-gray-900 font-bold py-3 px-6 rounded-full text-base md:text-lg transition-all duration-300 ease-in-out hover:scale-105 shadow-lg shadow-brand-gold/40 flex items-center gap-2"
               >
-                🎮 Chơi ngay
+                <span>🎮</span> Quiz Game
               </a>
 
+              {/* Nút Matching Game */}
+              <a
+                href="https://lenin-matching-game.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-emerald-500 hover:bg-emerald-400 text-gray-900 font-bold py-3 px-6 rounded-full text-base md:text-lg transition-all duration-300 ease-in-out hover:scale-105 shadow-lg shadow-emerald-500/40 flex items-center gap-2"
+              >
+                <span>🧩</span> Matching Game
+              </a>
+
+              {/* Nút Xem Luật Chơi */}
               <button
                 type="button"
                 onClick={() => navigate('guide')}
-                className="bg-transparent border-2 border-white/80 hover:bg-white hover:text-gray-900 text-white font-bold py-3 px-8 rounded-full text-lg transition-all duration-300 ease-in-out hover:scale-105"
+                className="bg-transparent border-2 border-white/30 hover:border-white hover:bg-white/10 text-white font-bold py-3 px-6 rounded-full text-base md:text-lg transition-all duration-300 ease-in-out hover:scale-105 flex items-center gap-2 backdrop-blur-sm"
               >
-                📺 Xem Luật chơi
+                <span>📺</span> Xem Luật chơi
               </button>
             </div>
+            {/* --- KẾT THÚC KHU VỰC BUTTONS --- */}
+
           </div>
 
           <aside className="mt-12 space-y-8 lg:mt-0 animate-fade-in-up lg:animate-delay-200">
