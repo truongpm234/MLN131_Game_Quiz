@@ -18,7 +18,7 @@ const InstructionsModal: React.FC<InstructionsModalProps> = ({ onClose }) => {
                         </p>
                         <p>
                             Trò chơi giúp người chơi <strong>ôn lại kiến thức, củng cố tinh thần</strong>, và chuẩn bị cho một
-                            <strong> kỳ FA25 thật tốt đẹp</strong>.
+                            <strong> môn MLN131 thật tốt đẹp</strong>.
                         </p>
                     </div>
 
