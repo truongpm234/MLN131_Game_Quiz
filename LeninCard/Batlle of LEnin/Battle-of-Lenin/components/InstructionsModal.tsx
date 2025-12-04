@@ -18,7 +18,7 @@ const InstructionsModal: React.FC<InstructionsModalProps> = ({ onClose }) => {
                         </p>
                         <p>
                             Trò chơi giúp người chơi <strong>ôn lại kiến thức, củng cố tinh thần</strong>, và chuẩn bị cho một
-                            <strong> môn MLN131 thật tốt đẹp</strong>.
+                            <strong> môn MLN131 thật tốt</strong>.
                         </p>
                     </div>
 
@@ -26,7 +26,7 @@ const InstructionsModal: React.FC<InstructionsModalProps> = ({ onClose }) => {
                         <h3 className="font-bold text-xl">🎮 CÁCH CHƠI</h3>
                         <div className="space-y-2">
                             <h4 className="font-semibold">🔹 1. Chọn thẻ</h4>
-                            <p>Trò chơi sẽ <strong>random một người chơi</strong> để chọn 1 tấm thẻ bất kỳ trên bàn.</p>
+                            <p>Người chơi sẽ <strong>random một</strong> 1 tấm thẻ bất kỳ trên bàn.</p>
                         </div>
                         <div className="space-y-2">
                             <h4 className="font-semibold">🔹 2. Hiện nội dung thẻ</h4>
@@ -44,8 +44,7 @@ const InstructionsModal: React.FC<InstructionsModalProps> = ({ onClose }) => {
                         <div className="space-y-2">
                             <h4 className="font-semibold">🔹 4. Kết thúc trò chơi</h4>
                             <p>
-                                Sau khi <strong>24 thẻ</strong> trên bàn được mở hết, hệ thống tổng hợp điểm và xếp hạng
-                                <strong> Top 1 – Top 2 – Top 3</strong>.
+                                Sau khi <strong>18 thẻ</strong> trên bàn được mở hết, hệ thống tổng hợp điểm.
                             </p>
                         </div>
                     </div>
@@ -53,8 +52,7 @@ const InstructionsModal: React.FC<InstructionsModalProps> = ({ onClose }) => {
                     <div className="space-y-2">
                         <h3 className="font-bold text-xl">🧩 CHẾ ĐỘ CHƠI</h3>
                         <ul className="list-disc list-inside space-y-1">
-                            <li>Người chơi có thể <strong>chơi đơn</strong>.</li>
-                            <li>Hoặc <strong>mời bạn bè</strong> tham gia để thi đấu cùng nhau.</li>
+                            <li><strong>Chơi đơn</strong>.</li>
                         </ul>
                     </div>
                 </div>

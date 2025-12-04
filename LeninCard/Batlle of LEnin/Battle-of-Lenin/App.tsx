@@ -482,9 +482,6 @@ const App: React.FC = () => {
         backgroundAttachment: 'fixed',
       }}
     >
-      <h1 className="text-4xl sm:text-5xl font-bold text-center text-[#c70000] my-4 sm:my-8 uppercase tracking-wider flex-shrink-0" style={{ textShadow: '2px 2px #000' }}>
-        Lenin Card
-      </h1>
       {quizError && (
         <p className="text-center text-sm text-red-300 mb-2">{quizError}</p>
       )}
