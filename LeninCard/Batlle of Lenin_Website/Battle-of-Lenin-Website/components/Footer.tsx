@@ -27,10 +27,6 @@ const Footer: React.FC = () => {
               ĐẠI  <span className="text-brand-gold">ĐỒNG</span>
             </span>
           </a>
-
-          <p className="max-w-2xl text-sm text-gray-300/90">
-            Chiến lược, tri thức và cảm hứng triết học – chúng tôi kiến tạo một hệ sinh thái game nơi tư duy dẫn lối mọi chiến thắng.
-          </p>
           <div className="mt-12 text-xs uppercase tracking-[0.15em] text-brand-gold/70">
             &copy; {new Date().getFullYear()} Đại Đồng • All rights reserved.
           </div>

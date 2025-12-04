@@ -1,132 +1,166 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface HomeProps {
   navigate: (page: string) => void;
 }
 
 const Home: React.FC<HomeProps> = ({ navigate }) => {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({
+        x: (e.clientX / window.innerWidth) * 20,
+        y: (e.clientY / window.innerHeight) * 20,
+      });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
   return (
-    <section
-      id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
-    >
-      {/* Ảnh nền chìm */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-105 transition-transform duration-[4000ms] animate-slow-zoom"
-        style={{
-          // Nếu ảnh nằm trong /public/background/background.jpg
-          backgroundImage: "url('background/background.jpg')",
-        }}
-      ></div>
+    <section id="home" className="relative min-h-screen bg-[#0a0a0a] text-white overflow-hidden font-sans selection:bg-rose-500/30">
+      
+      {/* --- BACKGROUND ANIMATION --- */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-blue-900/20 rounded-full blur-[120px] animate-pulse-slow"></div>
+        <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-rose-900/20 rounded-full blur-[150px] animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+        {/* Noise Texture */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}></div>
+      </div>
 
-      {/* Overlay gradient làm ảnh “chìm” để chữ nổi bật */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70 dark:from-black/70 dark:via-black/60 dark:to-black/80"></div>
-
-      {/* Nội dung */}
-      <div className="container relative mx-auto px-6 z-10">
-        {/* Decorative glows */}
-        <span className="pointer-events-none absolute -left-12 top-16 h-40 w-40 rounded-full bg-brand-gold/25 blur-3xl opacity-80"></span>
-        <span className="pointer-events-none absolute right-0 bottom-16 h-56 w-56 rounded-full bg-amber-500/15 blur-3xl opacity-70"></span>
-
-        <div className="relative mx-auto max-w-6xl text-left lg:grid lg:grid-cols-[1.35fr_1fr] lg:items-center lg:gap-14">
-          <div className="space-y-6 animate-fade-in-down">
-            <span className="inline-flex items-center gap-2 text-xs md:text-sm tracking-[0.35em] uppercase text-brand-gold/80">
-              Triết học • Chiến lược
-            </span>
-
-            <h1
-              className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-tight 
-              [text-shadow:0_4px_8px_rgba(0,0,0,0.6)]"
-            >
-              <span className="block bg-clip-text text-transparent bg-gradient-to-r from-brand-gold via-amber-300 to-amber-200">
-                Đại Đồng
+      <div className="container relative z-10 mx-auto px-6 py-12 lg:h-screen lg:flex lg:items-center">
+        <div className="grid lg:grid-cols-12 gap-16 items-center w-full">
+          
+          {/* --- LEFT CONTENT: HEADLINE --- */}
+          <div className="lg:col-span-7 space-y-10" style={{ transform: `translate(${mousePosition.x * -1}px, ${mousePosition.y * -1}px)` }}>
+            
+            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
               </span>
-              <span className="block mt-4 text-4xl md:text-5xl font-semibold text-white tracking-normal">
-                Chơi để chinh phục đỉnh cao tri thức!
+              <span className="text-xs font-bold tracking-[0.2em] uppercase text-gray-300">Không gian Tư duy Mới</span>
+            </div>
+
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-[0.9] tracking-tight">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-200 to-gray-500">
+                ĐÁNH THỨC
+              </span>
+              <span className="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500 animate-gradient-x">
+                TIỀM NĂNG
               </span>
             </h1>
 
-            <div className="h-1 w-24 rounded-full bg-gradient-to-r from-brand-gold/90 to-amber-400/70 shadow-lg shadow-brand-gold/40"></div>
-
-            <p className="text-lg md:text-xl text-gray-200/90 dark:text-gray-300 max-w-2xl leading-relaxed">
-              Chào mừng bạn đến với <strong>Đại Đồng</strong> – nơi tri thức gặp chiến lược.
-              Mỗi nước đi là một luận điểm, mỗi chiến thắng là một tuyên ngôn mới của tư duy. Khai mở
-              tầm nhìn, suy luận sâu sắc và kiến tạo con đường của riêng bạn.
+            <p className="text-lg md:text-xl text-gray-400 max-w-2xl leading-relaxed border-l-4 border-rose-500/50 pl-6">
+              Chào mừng bạn đến với <strong>Đại Đồng</strong>. Không chỉ là học tập, đây là hành trình 
+              <span className="text-white font-medium"> khai phóng tư duy</span>. Kết hợp lý luận sâu sắc với công nghệ gamification, 
+              chúng tôi biến những khái niệm trừu tượng thành trải nghiệm sống động.
             </p>
 
-            {/* --- KHU VỰC BUTTONS (ĐÃ SỬA) --- */}
-            {/* Sử dụng flex-wrap để trên mobile nếu màn hình quá nhỏ nó sẽ tự xuống dòng, còn desktop sẽ nằm ngang */}
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              {/* Nút Quiz Game */}
+            {/* --- ACTION BUTTONS (CHỈNH SỬA: DÙNG GRID ĐỂ ĐỀU NHAU) --- */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 w-full max-w-3xl">
+              {/* Nút Quiz */}
               <a
                 href="https://mln131-quiz-game.vercel.app/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-brand-gold hover:bg-amber-500 text-gray-900 font-bold py-3 px-6 rounded-full text-base md:text-lg transition-all duration-300 ease-in-out hover:scale-105 shadow-lg shadow-brand-gold/40 flex items-center gap-2"
+                className="group relative h-16 bg-gradient-to-r from-orange-500 to-rose-600 text-white font-bold rounded-2xl overflow-hidden shadow-lg shadow-orange-500/25 transition-all duration-300 hover:scale-105 hover:shadow-orange-500/40 flex items-center justify-center w-full"
               >
-                <span>🎮</span> Quiz Game
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
+                <span className="relative flex items-center gap-2 text-base md:text-lg whitespace-nowrap">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                  Quiz Game
+                </span>
               </a>
 
-              {/* Nút Matching Game */}
+              {/* Nút Matching */}
               <a
                 href="https://lenin-matching-game.vercel.app/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-emerald-500 hover:bg-emerald-400 text-gray-900 font-bold py-3 px-6 rounded-full text-base md:text-lg transition-all duration-300 ease-in-out hover:scale-105 shadow-lg shadow-emerald-500/40 flex items-center gap-2"
+                className="group relative h-16 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-2xl overflow-hidden shadow-lg shadow-cyan-500/25 transition-all duration-300 hover:scale-105 hover:shadow-cyan-500/40 flex items-center justify-center w-full"
               >
-                <span>🧩</span> Matching Game
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
+                <span className="relative flex items-center gap-2 text-base md:text-lg whitespace-nowrap">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                  Matching Game
+                </span>
               </a>
 
-              {/* Nút Xem Luật Chơi */}
+              {/* Nút Guide */}
               <button
                 type="button"
                 onClick={() => navigate('guide')}
-                className="bg-transparent border-2 border-white/30 hover:border-white hover:bg-white/10 text-white font-bold py-3 px-6 rounded-full text-base md:text-lg transition-all duration-300 ease-in-out hover:scale-105 flex items-center gap-2 backdrop-blur-sm"
+                className="group relative h-16 bg-white/5 backdrop-blur-md border border-white/10 text-gray-300 font-bold rounded-2xl overflow-hidden transition-all duration-300 hover:bg-white/10 hover:text-white hover:border-white/30 hover:scale-105 flex items-center justify-center w-full"
               >
-                <span>📺</span> Xem Luật chơi
+                <span className="relative flex items-center gap-2 text-base md:text-lg whitespace-nowrap">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                  Luật Chơi
+                </span>
               </button>
             </div>
-            {/* --- KẾT THÚC KHU VỰC BUTTONS --- */}
-
           </div>
 
-          <aside className="mt-12 space-y-8 lg:mt-0 animate-fade-in-up lg:animate-delay-200">
-            <div className="relative overflow-hidden rounded-3xl border border-white/15 bg-white/10 dark:bg-white/5 backdrop-blur-xl p-8 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.65)]">
-              <span className="absolute -top-12 -right-10 h-36 w-36 rounded-full bg-brand-gold/15 blur-3xl opacity-90"></span>
-              <span className="absolute -bottom-16 -left-6 h-28 w-28 rounded-full bg-emerald-500/10 blur-3xl opacity-80"></span>
-
-              <p className="text-xs font-semibold tracking-[0.4em] uppercase text-brand-gold/70">
-                Reflections
-              </p>
-              <blockquote className="mt-6 text-lg md:text-xl italic leading-relaxed text-gray-100">
-                “Không có gì cao hơn tri thức. Mọi chiến thắng đều bắt đầu từ sự suy tư sâu sắc và kỷ
-                luật của trí tuệ.”
-              </blockquote>
-              <div className="mt-6 flex items-center gap-3 text-sm text-gray-300/90">
-                <span className="h-px flex-1 bg-white/30"></span>
-                <span>Triết lý chiến lược</span>
-              </div>
-              <p className="mt-4 text-sm text-gray-300">
-                Hãy để mỗi ván đấu trở thành một cuộc đối thoại bằng lý luận giữa bạn và đối thủ, nơi
-                trí tuệ dẫn đường cho mọi quyết định.
-              </p>
-            </div>
-
-            <div className="flex items-center gap-4 text-gray-200/90">
-              <div className="grid h-16 w-16 place-items-center rounded-full border border-white/15 bg-gradient-to-br from-gray-900/60 to-gray-800/20 backdrop-blur-xl text-3xl">
-                ♕
-              </div>
-              <div className="text-sm leading-relaxed">
-                <p className="font-medium text-white/90 uppercase tracking-[0.25em]">Tri thức</p>
-                <p>
-                  Từ nền tảng triết học Marxist-Leninist đến những câu hỏi hiện đại, mỗi thử thách là
-                  cơ hội để bạn bứt phá và tái định nghĩa chiến thắng.
-                </p>
+          {/* --- RIGHT CONTENT: VISUALS --- */}
+          <div className="lg:col-span-5 relative mt-12 lg:mt-0" style={{ transform: `translate(${mousePosition.x}px, ${mousePosition.y}px)` }}>
+            {/* Glass Card */}
+            <div className="relative z-20 bg-white/5 backdrop-blur-2xl border border-white/10 p-8 rounded-[2.5rem] shadow-2xl">
+              <div className="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500 rounded-full blur-[60px] opacity-40 animate-pulse"></div>
+              
+              <div className="flex flex-col gap-6">
+                <div className="flex items-center gap-4 border-b border-white/10 pb-6">
+                  <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-rose-500 to-orange-500 flex items-center justify-center shadow-lg">
+                    <span className="text-2xl">💡</span>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-white">Góc Nhìn Biện Chứng</h3>
+                    <p className="text-xs text-gray-400 uppercase tracking-wider">Quote of the day</p>
+                  </div>
+                </div>
+                
+                <blockquote className="text-xl font-serif italic text-gray-200 leading-relaxed">
+                  "Lý luận mà không có thực tiễn là lý luận suông. Thực tiễn mà không có lý luận là thực tiễn mù quáng."
+                </blockquote>
+                
+                <div className="flex items-center justify-between pt-2">
+                  <div className="flex items-center gap-2">
+                    <div className="h-px w-8 bg-gray-500"></div>
+                    <span className="text-sm font-bold text-gray-400 uppercase tracking-widest">Hồ Chí Minh</span>
+                  </div>
+                  <span className="text-4xl text-white/10 font-serif">”</span>
+                </div>
               </div>
             </div>
-          </aside>
+
+            
+          </div>
         </div>
       </div>
+      <style>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
+        }
+        .animate-pulse-slow {
+          animation: pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .animate-spin-slow {
+          animation: spin 20s linear infinite;
+        }
+        .animate-gradient-x {
+          background-size: 200% 200%;
+          animation: gradientX 4s ease infinite;
+        }
+        @keyframes gradientX {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+      `}</style>
     </section>
   );
 };

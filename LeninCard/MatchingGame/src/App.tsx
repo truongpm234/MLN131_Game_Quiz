@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
-// Dữ liệu câu hỏi về Dân tộc và Tôn giáo trong thời kỳ quá độ lên CNXH
+// --- CẤU HÌNH DATA (GIỮ NGUYÊN) ---
 const RAW_DATA = [
   // === PHẦN 1: DÂN TỘC ===
   { q: "Dân tộc là gì?", a: "Cộng đồng chính trị - xã hội có chung phương thức sinh hoạt kinh tế, lãnh thổ, nhà nước, ngôn ngữ và nét tâm lý văn hóa." },
@@ -69,6 +69,7 @@ const RAW_DATA = [
   { q: "Mục tiêu cuối cùng khi giải quyết quan hệ dân tộc - tôn giáo là gì?", a: "Xây dựng nước Việt Nam dân giàu, nước mạnh, dân chủ, công bằng, văn minh." },
 ];
 
+// --- LOGIC GAME & UTILS ---
 const generateFullData = () => {
   let data = [...RAW_DATA];
   while (data.length < 63) {
@@ -77,8 +78,8 @@ const generateFullData = () => {
   return data.slice(0, 63).map((item, index) => ({ ...item, id: index }));
 };
 
-const PAIRS_PER_PAGE = 9;
-const TOTAL_PAGES = 7;
+const PAIRS_PER_PAGE = 7;
+const TOTAL_PAGES = 9;
 
 interface Card {
   id: number;
@@ -92,12 +93,12 @@ interface Connection {
   isCorrect?: boolean;
 }
 
+// --- MAIN COMPONENT ---
 function App() {
   const [allPairs, setAllPairs] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [currentPairs, setCurrentPairs] = useState<any[]>([]);
   
-  // Game State
   const [leftCards, setLeftCards] = useState<Card[]>([]);
   const [rightCards, setRightCards] = useState<Card[]>([]);
   const [selectedLeft, setSelectedLeft] = useState<Card | null>(null);
@@ -106,8 +107,8 @@ function App() {
   const [checkedConnections, setCheckedConnections] = useState<Connection[]>([]);
   const [hintedIds, setHintedIds] = useState<Set<number>>(new Set());
   const [isChecked, setIsChecked] = useState(false);
+  const [updateTrigger, setUpdateTrigger] = useState(0); // Force update state
   
-  // Score State
   const [score, setScore] = useState(0);
   const [pageScore, setPageScore] = useState(0);
   const [isPageFinished, setIsPageFinished] = useState(false);
@@ -121,6 +122,11 @@ function App() {
     const data = generateFullData();
     setAllPairs(data);
     loadPage(0, data);
+    
+    // Add resize listener to update lines
+    const handleResize = () => setUpdateTrigger(prev => prev + 1);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const loadPage = (pageIndex: number, sourceData: any[]) => {
@@ -146,14 +152,13 @@ function App() {
   };
 
   const handleCardClick = (card: Card, side: 'left' | 'right') => {
-    if (isChecked) return; // Không cho chọn sau khi đã check
+    if (isChecked) return; 
     
     if (side === 'left') {
       if (selectedLeft?.id === card.id) {
         setSelectedLeft(null);
       } else {
         setSelectedLeft(card);
-        // Nếu đã chọn bên phải, tạo connection
         if (selectedRight) {
           createConnection(card.id, selectedRight.id);
           setSelectedLeft(null);
@@ -165,7 +170,6 @@ function App() {
         setSelectedRight(null);
       } else {
         setSelectedRight(card);
-        // Nếu đã chọn bên trái, tạo connection
         if (selectedLeft) {
           createConnection(selectedLeft.id, card.id);
           setSelectedLeft(null);
@@ -176,7 +180,6 @@ function App() {
   };
 
   const createConnection = (leftId: number, rightId: number) => {
-    // Xóa connection cũ nếu có
     const filtered = connections.filter(
       c => c.leftId !== leftId && c.rightId !== rightId
     );
@@ -186,7 +189,6 @@ function App() {
   const handleCheck = () => {
     if (connections.length === 0) return;
     
-    // Kiểm tra từng connection
     const checked = connections.map(conn => ({
       ...conn,
       isCorrect: conn.leftId === conn.rightId
@@ -195,38 +197,29 @@ function App() {
     setCheckedConnections(checked);
     setIsChecked(true);
     
-    // Tính điểm
     const correctCount = checked.filter(c => c.isCorrect).length;
     const points = correctCount * 100;
     setPageScore(points);
     setScore(prev => prev + points);
     
-    // Kiểm tra hoàn thành trang
     if (correctCount === currentPairs.length) {
-      setTimeout(() => setIsPageFinished(true), 1000);
+      setTimeout(() => setIsPageFinished(true), 800);
     }
   };
 
   const handleHint = () => {
     if (isChecked) return;
-    
-    // Trừ 50 điểm
     setScore(prev => Math.max(0, prev - 50));
-    
-    // Tìm các đáp án sai cho mỗi câu hỏi đã chọn connection
     const newHintedIds = new Set(hintedIds);
     
     connections.forEach(conn => {
       const correctAnswerId = conn.leftId;
-      // Tìm 5 đáp án sai (khác với đáp án đúng)
       const wrongAnswers = rightCards
         .filter(card => card.id !== correctAnswerId && !newHintedIds.has(card.id))
         .slice(0, 5);
-      
       wrongAnswers.forEach(card => newHintedIds.add(card.id));
     });
     
-    // Nếu chưa có connection nào, hint random 5 đáp án
     if (connections.length === 0 && selectedLeft) {
       const wrongAnswers = rightCards
         .filter(card => card.id !== selectedLeft.id)
@@ -249,7 +242,7 @@ function App() {
   };
 
   const handleRetryPage = () => {
-    // Load lại trang hiện tại
+    setScore(prev => Math.max(0, prev - pageScore)); 
     loadPage(currentPage, allPairs);
   };
 
@@ -257,19 +250,14 @@ function App() {
     window.location.reload();
   };
 
-  // Hàm vẽ đường nối
   const renderConnections = () => {
     if (!containerRef.current) return null;
-    
     const containerRect = containerRef.current.getBoundingClientRect();
     const linesToDraw = isChecked ? checkedConnections : connections;
     
     return (
-      <svg
-        className="absolute inset-0 pointer-events-none z-0"
-        style={{ width: '100%', height: '100%' }}
-      >
-        {linesToDraw.map((conn, idx) => {
+      <svg className="absolute inset-0 pointer-events-none z-0 overflow-visible w-full h-full">
+        {linesToDraw.map((conn) => {
           const leftEl = leftRefs.current[conn.leftId];
           const rightEl = rightRefs.current[conn.rightId];
           
@@ -278,57 +266,41 @@ function App() {
           const leftRect = leftEl.getBoundingClientRect();
           const rightRect = rightEl.getBoundingClientRect();
           
-          const x1 = leftRect.right - containerRect.left;
+          // Connect from the dots - Corrected logic to ensure line stays exactly at anchor
+          const x1 = leftRect.right - containerRect.left; 
           const y1 = leftRect.top + leftRect.height / 2 - containerRect.top;
           const x2 = rightRect.left - containerRect.left;
           const y2 = rightRect.top + rightRect.height / 2 - containerRect.top;
           
+          // Tính toán độ cong - Đảm bảo đường nối luôn hiện rõ kể cả khi nằm ngang
+          const distanceX = Math.abs(x2 - x1);
+          const controlOffset = Math.min(distanceX * 0.6, 120); 
+
           const color = isChecked 
-            ? (conn.isCorrect ? '#10b981' : '#ef4444')
-            : '#f59e0b';
+            ? (conn.isCorrect ? '#10b981' : '#ef4444') // Emerald or Red
+            : '#f59e0b'; // Amber for active
           
+          const key = `${conn.leftId}-${conn.rightId}`;
+
           return (
-            <line
-              key={idx}
-              x1={x1}
-              y1={y1}
-              x2={x2}
-              y2={y2}
+            <path
+              key={key}
+              d={`M ${x1} ${y1} C ${x1 + controlOffset} ${y1}, ${x2 - controlOffset} ${y2}, ${x2} ${y2}`}
+              fill="none"
               stroke={color}
-              strokeWidth="3"
-              strokeDasharray={isChecked && !conn.isCorrect ? "5,5" : "none"}
-              className="transition-all duration-300"
+              strokeWidth="4"
+              strokeDasharray={isChecked && !conn.isCorrect ? "8,4" : "none"}
+              className="transition-all duration-300 ease-out" 
+              style={{
+                strokeLinecap: 'round',
+                opacity: 0.9
+              }}
             />
           );
         })}
       </svg>
     );
   };
-
-  if (isGameFinished) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-4 text-center bg-gradient-to-br from-gray-900 via-black to-gray-900">
-        <div className="bg-gradient-to-br from-[#fdf6e3] to-amber-50 text-gray-900 p-10 rounded-3xl border-4 border-amber-600 shadow-2xl max-w-2xl animate-fade-in">
-          <div className="mb-6">
-            <span className="text-6xl">🏆</span>
-          </div>
-          <h1 className="text-4xl font-black uppercase text-[#c70000] mb-4">Hoàn thành xuất sắc!</h1>
-          <p className="text-xl font-bold mb-6">Bạn đã vượt qua {TOTAL_PAGES} chặng đường tri thức.</p>
-          
-          <div className="bg-white/50 rounded-xl p-6 mb-8 border border-amber-300">
-            <p className="text-sm uppercase tracking-widest text-gray-600">Tổng điểm đạt được</p>
-            <p className="text-6xl font-black text-[#c70000] mt-2">{score}</p>
-          </div>
-
-          <div className="flex gap-4 justify-center">
-            <button onClick={handleRestart} className="px-8 py-3 bg-[#c70000] text-white font-bold rounded-lg hover:bg-[#a60000] transition border-2 border-black">
-              Chơi Lại
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   const hasConnection = (cardId: number, side: 'left' | 'right') => {
     return connections.some(c => 
@@ -344,124 +316,222 @@ function App() {
     return conn?.isCorrect;
   };
 
-  return (
-    <div className="min-h-screen flex flex-col items-center py-8 px-4 relative overflow-hidden bg-[#05060d] text-gray-100">
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(199,0,0,0.1),transparent_70%)]"></div>
+  const HomeButton = () => (
+    <a 
+      href="https://homepage-swart-pi.vercel.app/" 
+      className="fixed top-6 left-6 z-50 group flex items-center justify-center p-3 bg-white hover:bg-stone-50 border border-stone-200 rounded-full shadow-lg transition-all duration-300 hover:scale-105 hover:border-amber-400"
+      title="Về trang chủ"
+    >
+      <div className="bg-stone-100 p-2 rounded-full group-hover:bg-amber-100 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-stone-600 group-hover:text-amber-600 transition-colors">
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
       </div>
+      <span className="hidden md:block ml-3 mr-2 text-xs font-bold text-stone-600 group-hover:text-amber-700 transition-colors uppercase tracking-widest">Trang Chủ</span>
+    </a>
+  );
 
-      <header className="w-full max-w-7xl flex justify-between items-center mb-8 relative z-10">
-        <div className="flex items-center gap-4">
-          <div className="bg-white/10 px-4 py-2 rounded-full border border-white/20 backdrop-blur-md">
-            <span className="text-amber-400 font-bold">Trang {currentPage + 1}/{TOTAL_PAGES}</span>
+  if (isGameFinished) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen p-4 text-center bg-[#fdfaf6] text-stone-800 overflow-hidden relative">
+        <HomeButton />
+        
+        {/* Background Decor */}
+        <div className="fixed inset-0 pointer-events-none -z-10">
+           {/* Ảnh nền làm mờ - Tăng opacity để rõ hơn */}
+           <div 
+             className="absolute inset-0 bg-cover bg-center bg-no-repeat blur-md scale-105 opacity-80"
+             style={{ backgroundImage: "url('/img.jpg')" }} 
+           ></div>
+           {/* Lớp phủ màu nhẹ - Giảm opacity để ảnh nền hiện ra */}
+           <div className="absolute inset-0 bg-gradient-to-br from-[#fdfaf6]/80 via-[#fdfaf6]/60 to-[#fdfaf6]/80"></div>
+        </div>
+        
+        <div className="relative bg-white p-12 rounded-[3rem] border border-stone-100 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] max-w-2xl w-full animate-fade-in-up overflow-hidden">
+          
+          <div className="mb-8 relative inline-block">
+             <div className="absolute inset-0 bg-amber-200 blur-3xl opacity-40 animate-pulse"></div>
+             <span className="relative text-8xl drop-shadow-sm">🎓</span>
+          </div>
+          
+          <h1 className="text-4xl md:text-5xl font-black uppercase text-stone-800 mb-6 tracking-tight">
+            Hoàn Thành Xuất Sắc!
+          </h1>
+          <p className="text-lg text-stone-500 mb-10 font-medium leading-relaxed">
+            Bạn đã kết nối thành công {TOTAL_PAGES} trang tri thức.
+          </p>
+          
+          <div className="bg-stone-50 rounded-[2rem] p-8 mb-10 border border-stone-100">
+            <p className="text-xs uppercase tracking-[0.4em] text-stone-400 mb-3 font-bold">Tổng điểm</p>
+            <p className="text-7xl font-black text-amber-500 tracking-tighter drop-shadow-sm">
+              {score}
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-5 justify-center">
+             <a href="https://homepage-swart-pi.vercel.app/" className="px-8 py-4 rounded-full font-bold bg-white hover:bg-stone-50 text-stone-600 border border-stone-200 transition-all hover:scale-105 shadow-sm flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                Về Trang Chủ
+             </a>
+            <button onClick={handleRestart} className="px-10 py-4 bg-stone-800 hover:bg-stone-900 text-white font-bold rounded-full shadow-lg transition-all hover:scale-105 hover:shadow-stone-900/20 flex items-center justify-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+              Chơi Lại
+            </button>
           </div>
         </div>
-        <h1 className="text-2xl md:text-3xl font-black uppercase tracking-wider text-amber-400 drop-shadow-md hidden md:block">
-          Nối Thẻ Tri Thức
-        </h1>
-        <div className="flex items-center gap-4">
-          <div className="bg-gradient-to-r from-[#c70000] to-[#990000] px-6 py-2 rounded-lg border border-red-500 shadow-lg">
-            <span className="text-xs uppercase text-red-200 block">Tổng Điểm</span>
-            <span className="text-2xl font-bold text-white">{score}</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen flex flex-col items-center py-6 px-4 md:px-8 relative bg-[#fdfaf6] text-stone-800 font-sans selection:bg-amber-100 overflow-x-hidden">
+      <HomeButton />
+      
+      {/* Background Decor */}
+      <div className="fixed inset-0 pointer-events-none -z-10">
+         {/* Ảnh nền làm mờ - Tăng opacity để rõ hơn */}
+         <div 
+           className="absolute inset-0 bg-cover bg-center bg-no-repeat blur-md scale-105 opacity-80"
+           style={{ backgroundImage: "url('/img.jpg')" }} 
+         ></div>
+         {/* Lớp phủ màu nhẹ - Giảm opacity để ảnh nền hiện ra */}
+         <div className="absolute inset-0 bg-gradient-to-br from-[#fdfaf6]/80 via-[#fdfaf6]/60 to-[#fdfaf6]/80"></div>
+      </div>
+
+      {/* HEADER */}
+      <header className="w-full max-w-7xl flex flex-col md:flex-row justify-between items-center mb-10 relative z-10 gap-6 mt-16 md:mt-4 px-4">
+        <div className="flex items-center gap-4 order-2 md:order-1">
+          <div className="bg-white px-5 py-2.5 rounded-full border border-stone-200 shadow-sm flex items-center gap-3">
+            <div className="flex gap-1">
+               {Array.from({length: TOTAL_PAGES}).map((_, i) => (
+                  <div key={i} className={`w-2 h-2 rounded-full transition-all ${i === currentPage ? 'bg-amber-500 scale-110' : i < currentPage ? 'bg-stone-300' : 'bg-stone-200'}`}></div>
+               ))}
+            </div>
+            <span className="text-stone-400 text-[10px] font-bold uppercase tracking-widest pl-3 border-l border-stone-100">Trang {currentPage + 1}</span>
+          </div>
+        </div>
+        
+        <div className="text-center order-1 md:order-2">
+           <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tight text-stone-800 leading-none">
+             Đại <span className="text-amber-600">Đồng</span>
+           </h1>
+           <div className="h-1 w-12 bg-amber-500 rounded-full mx-auto mt-2 mb-1"></div>
+           <p className="text-[9px] uppercase tracking-[0.4em] text-stone-400 font-bold">Matching Card Game</p>
+        </div>
+        
+        <div className="order-3 flex items-center gap-4">
+          <div className="bg-white px-6 py-3 rounded-[2rem] border border-stone-200 shadow-sm flex flex-col items-end min-w-[120px]">
+            <span className="text-[9px] uppercase text-stone-400 tracking-widest font-bold">Điểm số</span>
+            <span className="text-2xl font-black text-amber-600 tracking-tighter">{score}</span>
           </div>
         </div>
       </header>
 
-      {/* Action Buttons */}
-      <div className="w-full max-w-7xl flex justify-center gap-4 mb-6 relative z-10">
+      {/* ACTION BAR */}
+      <div className="w-full max-w-7xl flex flex-wrap justify-center gap-4 mb-12 relative z-20">
         <button
           onClick={handleHint}
           disabled={isChecked}
-          className={`px-6 py-3 bg-purple-600 text-white font-bold rounded-lg transition border-2 border-purple-400 flex items-center gap-2
-            ${isChecked ? 'opacity-50 cursor-not-allowed' : 'hover:bg-purple-700 hover:scale-105'}`}
+          className={`group px-6 py-3 bg-white text-indigo-600 hover:text-white font-bold rounded-full transition-all border border-indigo-100 flex items-center gap-3 shadow-sm hover:shadow-lg hover:-translate-y-1
+            ${isChecked ? 'opacity-50 cursor-not-allowed grayscale' : 'hover:bg-indigo-500 hover:border-indigo-500'}`}
         >
-          💡 Gợi ý (-50 điểm)
+          <span className="bg-indigo-50 text-indigo-600 p-1 rounded-full group-hover:bg-white/20 group-hover:text-white transition-colors">💡</span>
+          <span>Gợi ý (-50đ)</span>
         </button>
         
         <button
           onClick={handleCheck}
           disabled={connections.length === 0 || isChecked}
-          className={`px-8 py-3 bg-green-600 text-white font-bold rounded-lg transition border-2 border-green-400 flex items-center gap-2
-            ${connections.length === 0 || isChecked ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-700 hover:scale-105'}`}
+          className={`group px-8 py-3 bg-stone-800 text-emerald-300 hover:text-white font-bold rounded-full transition-all border border-stone-700 flex items-center gap-3 shadow-lg hover:shadow-xl hover:-translate-y-1 scale-100
+            ${connections.length === 0 || isChecked ? 'opacity-50 cursor-not-allowed grayscale' : 'hover:bg-emerald-600 hover:border-emerald-600'}`}
         >
-          ✓ Kiểm tra kết quả
+          <span className="bg-stone-700 text-emerald-400 p-1 rounded-full group-hover:bg-white/20 group-hover:text-white transition-colors">✓</span>
+          <span>Kiểm tra kết quả</span>
         </button>
       </div>
 
-      {/* Results after check */}
+      {/* RESULTS BAR */}
       {isChecked && (
-        <div className="w-full max-w-7xl mb-6 relative z-10">
-          <div className="bg-white/10 backdrop-blur-md rounded-lg p-4 border border-white/20">
-            <div className="flex justify-between items-center mb-4">
-              <div>
-                <span className="text-green-400 font-bold text-lg">
-                  ✓ Đúng: {checkedConnections.filter(c => c.isCorrect).length}/{currentPairs.length}
-                </span>
-                <span className="text-red-400 font-bold text-lg ml-4">
-                  ✗ Sai: {checkedConnections.filter(c => !c.isCorrect).length}/{currentPairs.length}
-                </span>
+        <div className="w-full max-w-5xl mb-12 relative z-20 animate-fade-in-down px-4">
+          <div className="bg-white rounded-[2.5rem] p-6 border border-stone-200 shadow-xl flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-2 h-full bg-amber-500"></div>
+            
+            <div className="flex items-center gap-8 pl-6">
+              <div className="flex flex-col">
+                <span className="text-[10px] uppercase text-stone-400 tracking-widest font-bold mb-1">Chính xác</span>
+                <div className="flex items-baseline gap-2">
+                   <span className="text-4xl font-black text-stone-800">{checkedConnections.filter(c => c.isCorrect).length}</span>
+                   <span className="text-sm text-stone-500 font-bold">/ {currentPairs.length}</span>
+                </div>
               </div>
-              <div className="text-2xl font-bold text-amber-400">
-                +{pageScore} điểm
+              <div className="h-10 w-px bg-stone-200"></div>
+              <div className="flex flex-col">
+                 <span className="text-[10px] uppercase text-stone-400 tracking-widest font-bold mb-1">Thưởng</span>
+                 <span className="text-3xl font-bold text-amber-600">+{pageScore}</span>
               </div>
             </div>
             
-            {/* Action buttons after check */}
-            <div className="flex gap-3 mt-4">
+            <div className="flex gap-3 w-full md:w-auto">
               <button 
                 onClick={handleRetryPage}
-                className="flex-1 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-lg transition transform hover:scale-105 shadow-md border border-amber-600 flex items-center justify-center gap-2"
+                className="flex-1 md:flex-none px-6 py-3 bg-stone-50 hover:bg-stone-100 text-stone-600 font-bold rounded-full border border-stone-200 transition-all flex items-center justify-center gap-2"
               >
-                🔄 Làm lại trang này
+                <span>↺</span> Làm lại
               </button>
               <button 
                 onClick={handleNextPage}
-                className="flex-1 py-3 bg-[#c70000] hover:bg-[#a60000] text-white font-bold rounded-lg transition transform hover:scale-105 shadow-md border border-red-600 flex items-center justify-center gap-2"
+                className="flex-1 md:flex-none px-8 py-3 bg-stone-800 hover:bg-stone-900 text-white font-bold rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2"
               >
-                {currentPage + 1 === TOTAL_PAGES ? '🏆 Xem kết quả' : 'Trang kế tiếp →'}
+                {currentPage + 1 === TOTAL_PAGES ? 'Tổng Kết 🏆' : 'Tiếp Theo →'}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      <main className="w-full max-w-7xl flex-grow relative z-10" ref={containerRef}>
-        {isPageFinished ? (
-          <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/60 backdrop-blur-sm rounded-3xl fade-in">
-            <div className="bg-[#fdf6e3] text-gray-900 p-8 rounded-2xl border-4 border-[#c70000] text-center shadow-2xl max-w-md w-full">
-              <h2 className="text-3xl font-bold text-[#c70000] mb-2">Hoàn thành trang {currentPage + 1}!</h2>
-              <p className="text-lg mb-4">Bạn đã nối chính xác {checkedConnections.filter(c => c.isCorrect).length}/{currentPairs.length} cặp câu hỏi.</p>
-              <div className="flex justify-between items-center bg-yellow-100 p-4 rounded-lg mb-6">
-                <span className="font-semibold">Điểm trang này:</span>
-                <span className="text-2xl font-bold text-[#c70000]">+{pageScore}</span>
-              </div>
-              
-              {/* Two action buttons */}
-              <div className="flex gap-3">
-                <button 
-                  onClick={handleRetryPage}
-                  className="flex-1 py-4 bg-amber-500 text-white font-bold text-lg rounded-xl hover:bg-amber-600 transition transform hover:scale-105 shadow-lg border-2 border-amber-700 flex items-center justify-center gap-2"
-                >
-                  🔄 Làm lại
-                </button>
-                <button 
-                  onClick={handleNextPage}
-                  className="flex-1 py-4 bg-[#c70000] text-white font-bold text-lg rounded-xl hover:bg-[#a60000] transition transform hover:scale-105 shadow-lg border-2 border-black flex items-center justify-center gap-2"
-                >
-                  {currentPage + 1 === TOTAL_PAGES ? '🏆 Kết quả' : 'Tiếp theo →'}
-                </button>
-              </div>
-            </div>
-          </div>
-        ) : null}
+      {/* GAME AREA */}
+      <main className="w-full max-w-7xl flex-grow relative z-10 px-2" ref={containerRef}>
+        
+        {/* Modal Hoàn Thành Trang */}
+        {isPageFinished && (
+          <div className="absolute inset-0 z-50 flex items-center justify-center p-4">
+             <div className="absolute inset-0 bg-stone-900/20 backdrop-blur-sm animate-fade-in"></div>
+             <div className="relative bg-white p-10 rounded-[3rem] border border-stone-100 shadow-2xl max-w-md w-full text-center animate-zoom-in overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-amber-400 to-orange-500"></div>
+                <div className="absolute -top-12 left-1/2 -translate-x-1/2">
+                   <div className="text-7xl drop-shadow-xl filter hover:scale-110 transition-transform cursor-default">👏</div>
+                </div>
+                <h2 className="text-3xl font-black text-stone-800 uppercase mt-6 mb-2">Tuyệt Vời!</h2>
+                <p className="text-stone-500 mb-8 font-medium">Trang {currentPage + 1} hoàn thành.</p>
+                
+                <div className="bg-stone-50 rounded-[2rem] p-5 mb-8 border border-stone-100">
+                  <p className="text-xs uppercase tracking-widest text-stone-400 mb-1">Điểm nhận được</p>
+                  <div className="text-5xl font-black text-amber-500">+{pageScore}</div>
+                </div>
 
-        {/* Connection Lines */}
+                <div className="flex gap-4">
+                   <button onClick={handleRetryPage} className="flex-1 py-3.5 bg-stone-100 text-stone-500 hover:text-stone-800 rounded-full font-bold transition-colors">Làm lại</button>
+                   <button onClick={handleNextPage} className="flex-1 py-3.5 bg-stone-800 hover:bg-stone-900 text-white rounded-full font-bold shadow-xl transition-all transform hover:-translate-y-1">Tiếp tục</button>
+                </div>
+             </div>
+          </div>
+        )}
+
+        {/* Lines Layer */}
         {renderConnections()}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-full relative z-10">
-          {/* Cột Câu Hỏi */}
-          <div className="space-y-3">
-            <h3 className="text-center text-sm uppercase tracking-widest text-blue-300 mb-4 font-bold">Câu Hỏi</h3>
+        {/* Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-20 md:gap-48 h-full relative z-10">
+          
+          {/* Cột Câu Hỏi (Trái) */}
+          <div className="space-y-6">
+            <div className="flex items-center justify-center gap-4 mb-4 opacity-60">
+               <div className="h-px w-12 bg-stone-300"></div>
+               <h3 className="text-xs uppercase tracking-[0.3em] text-stone-400 font-bold">Câu Hỏi</h3>
+               <div className="h-px w-12 bg-stone-300"></div>
+            </div>
+            
             {leftCards.map((card) => {
               const isSelected = selectedLeft?.id === card.id;
               const isConnected = hasConnection(card.id, 'left');
@@ -473,29 +543,46 @@ function App() {
                   ref={(el) => { leftRefs.current[card.id] = el; }}
                   onClick={() => handleCardClick(card, 'left')}
                   className={`
-                    relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 card-hover bg-white/5 backdrop-blur-md min-h-[80px] flex items-center
-                    ${isSelected ? 'selected bg-blue-500/20 border-blue-400' : 'border-white/10 hover:border-white/30'}
-                    ${isConnected && !isChecked ? 'border-amber-400 bg-amber-500/10' : ''}
-                    ${status === true ? 'border-green-500 bg-green-500/20' : ''}
-                    ${status === false ? 'border-red-500 bg-red-500/20' : ''}
+                    relative p-6 rounded-[2rem] border-2 cursor-pointer transition-all duration-300 group
+                    min-h-[120px] flex items-center shadow-sm hover:shadow-lg
+                    ${isSelected 
+                      ? 'bg-amber-50 border-amber-400 scale-105 z-20 shadow-amber-200/50' 
+                      : 'bg-white border-stone-100 hover:border-stone-300'}
+                    ${isConnected && !isChecked ? 'bg-amber-50 border-amber-300' : ''}
+                    ${status === true ? '!bg-emerald-50 !border-emerald-400' : ''}
+                    ${status === false ? '!bg-red-50 !border-red-400 animate-shake' : ''}
                   `}
                 >
-                  <div className={`absolute left-0 top-0 bottom-0 w-1 rounded-l-xl ${
-                    status === true ? 'bg-green-500' :
-                    status === false ? 'bg-red-500' :
-                    'bg-blue-500'
-                  }`}></div>
-                  <p className="text-sm md:text-base font-medium">{card.content}</p>
-                  {status === true && <span className="ml-auto text-green-500 text-2xl">✓</span>}
-                  {status === false && <span className="ml-auto text-red-500 text-2xl">✗</span>}
+                  {/* Connection Anchor Dot (Right Side) */}
+                  <div className={`absolute -right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-white transition-colors duration-300 z-10
+                    ${isSelected ? 'bg-amber-500 scale-125' : 
+                      isConnected ? 'bg-amber-400' :
+                      status === true ? 'bg-emerald-500' :
+                      status === false ? 'bg-red-500' :
+                      'bg-stone-300 group-hover:bg-stone-400'}
+                  `}></div>
+
+                  <p className="text-[15px] font-bold leading-relaxed pl-2 pr-4 text-stone-700 group-hover:text-stone-900 transition-colors">
+                    {card.content}
+                  </p>
+                  
+                  {/* Status Indicator */}
+                  <div className="absolute top-4 right-4">
+                     {status === true && <span className="text-emerald-500 bg-emerald-100 p-1 rounded-full text-xs font-bold block">✓</span>}
+                     {status === false && <span className="text-red-500 bg-red-100 p-1 rounded-full text-xs font-bold block">✗</span>}
+                  </div>
                 </div>
               );
             })}
           </div>
 
-          {/* Cột Đáp Án */}
-          <div className="space-y-3">
-            <h3 className="text-center text-sm uppercase tracking-widest text-green-300 mb-4 font-bold">Đáp Án</h3>
+          {/* Cột Đáp Án (Phải) */}
+          <div className="space-y-6">
+             <div className="flex items-center justify-center gap-4 mb-4 opacity-60">
+               <div className="h-px w-12 bg-stone-300"></div>
+               <h3 className="text-xs uppercase tracking-[0.3em] text-stone-400 font-bold">Đáp Án</h3>
+               <div className="h-px w-12 bg-stone-300"></div>
+            </div>
             {rightCards.map((card) => {
               const isSelected = selectedRight?.id === card.id;
               const isConnected = hasConnection(card.id, 'right');
@@ -508,22 +595,35 @@ function App() {
                   ref={(el) => { rightRefs.current[card.id] = el; }}
                   onClick={() => handleCardClick(card, 'right')}
                   className={`
-                    relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 card-hover bg-white/5 backdrop-blur-md min-h-[80px] flex items-center justify-end text-right
-                    ${isSelected ? 'selected bg-green-500/20 border-green-400' : 'border-white/10 hover:border-white/30'}
-                    ${isConnected && !isChecked ? 'border-amber-400 bg-amber-500/10' : ''}
-                    ${isHinted && !isChecked ? 'opacity-30 blur-[2px]' : ''}
-                    ${status === true ? 'border-green-500 bg-green-500/20' : ''}
-                    ${status === false ? 'border-red-500 bg-red-500/20' : ''}
+                    relative p-6 rounded-[2rem] border-2 cursor-pointer transition-all duration-300 group
+                    min-h-[120px] flex items-center justify-end text-right shadow-sm hover:shadow-lg
+                    ${isSelected 
+                      ? 'bg-amber-50 border-amber-400 scale-105 z-20 shadow-amber-200/50' 
+                      : 'bg-white border-stone-100 hover:border-stone-300'}
+                    ${isConnected && !isChecked ? 'bg-amber-50 border-amber-300' : ''}
+                    ${isHinted && !isChecked ? 'opacity-40 grayscale blur-[1px]' : ''}
+                    ${status === true ? '!bg-emerald-50 !border-emerald-400' : ''}
+                    ${status === false ? '!bg-red-50 !border-red-400 animate-shake' : ''}
                   `}
                 >
-                  <div className={`absolute right-0 top-0 bottom-0 w-1 rounded-r-xl ${
-                    status === true ? 'bg-green-500' :
-                    status === false ? 'bg-red-500' :
-                    'bg-green-500'
-                  }`}></div>
-                  {status === true && <span className="mr-auto text-green-500 text-2xl">✓</span>}
-                  {status === false && <span className="mr-auto text-red-500 text-2xl">✗</span>}
-                  <p className="text-sm md:text-base font-medium text-gray-300">{card.content}</p>
+                  {/* Connection Anchor Dot (Left Side) */}
+                  <div className={`absolute -left-1.5 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full border-2 border-white transition-colors duration-300 z-10
+                    ${isSelected ? 'bg-amber-500 scale-125' : 
+                      isConnected ? 'bg-amber-400' :
+                      status === true ? 'bg-emerald-500' :
+                      status === false ? 'bg-red-500' :
+                      'bg-stone-300 group-hover:bg-stone-400'}
+                  `}></div>
+
+                  <p className="text-[15px] font-medium leading-relaxed pr-2 pl-4 text-stone-600 group-hover:text-stone-800 transition-colors">
+                    {card.content}
+                  </p>
+
+                  {/* Status Indicator */}
+                  <div className="absolute top-4 left-4">
+                     {status === true && <span className="text-emerald-500 bg-emerald-100 p-1 rounded-full text-xs font-bold block">✓</span>}
+                     {status === false && <span className="text-red-500 bg-red-100 p-1 rounded-full text-xs font-bold block">✗</span>}
+                  </div>
                 </div>
               );
             })}
@@ -531,31 +631,83 @@ function App() {
         </div>
       </main>
 
-      {/* Wrong answers display after check */}
+      {/* FOOTER - Wrong Answers Display */}
       {isChecked && checkedConnections.some(c => !c.isCorrect) && (
-        <div className="w-full max-w-7xl mt-6 relative z-10">
-          <div className="bg-red-900/30 backdrop-blur-md rounded-lg p-6 border border-red-500/50">
-            <h3 className="text-xl font-bold text-red-400 mb-4">📝 Đáp án các câu sai:</h3>
-            <div className="space-y-3">
-              {checkedConnections
-                .filter(c => !c.isCorrect)
-                .map((conn, idx) => {
-                  const question = currentPairs.find(p => p.id === conn.leftId);
-                  const correctAnswer = currentPairs.find(p => p.id === conn.leftId);
-                  const yourAnswer = currentPairs.find(p => p.id === conn.rightId);
-                  
-                  return (
-                    <div key={idx} className="bg-white/5 rounded-lg p-4">
-                      <p className="text-blue-300 font-semibold mb-2">❓ {question?.q}</p>
-                      <p className="text-red-400 mb-1">✗ Bạn chọn: {yourAnswer?.a}</p>
-                      <p className="text-green-400">✓ Đáp án đúng: {correctAnswer?.a}</p>
-                    </div>
-                  );
-                })}
-            </div>
-          </div>
+        <div className="w-full max-w-4xl mt-16 mb-10 relative z-10 animate-fade-in-up px-4">
+           <div className="relative group">
+              <div className="absolute inset-0 bg-red-50 blur-xl rounded-[3rem]"></div>
+              <div className="relative bg-white border border-red-100 rounded-[2.5rem] p-8 shadow-xl overflow-hidden">
+                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-400 to-orange-400"></div>
+                 
+                 <h3 className="text-xl font-bold text-red-700 mb-8 flex items-center gap-3 uppercase tracking-wide">
+                    <span className="bg-red-50 p-2 rounded-full"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+                    Cần xem lại
+                 </h3>
+                 <div className="grid grid-cols-1 gap-4">
+                    {checkedConnections
+                    .filter(c => !c.isCorrect)
+                    .map((conn, idx) => {
+                       const question = currentPairs.find(p => p.id === conn.leftId);
+                       const correctAnswer = currentPairs.find(p => p.id === conn.leftId);
+                       const yourAnswer = currentPairs.find(p => p.id === conn.rightId);
+                       
+                       return (
+                          <div key={idx} className="bg-stone-50 rounded-[2rem] p-6 border border-red-100 hover:border-red-200 transition-colors">
+                             <div className="mb-4">
+                                <span className="text-[10px] font-bold text-stone-400 uppercase tracking-widest bg-white px-3 py-1 rounded-full shadow-sm">Câu hỏi</span>
+                                <p className="text-stone-800 font-bold mt-3 text-lg">{question?.q}</p>
+                             </div>
+                             <div className="grid md:grid-cols-2 gap-6">
+                                <div className="bg-red-50 p-5 rounded-[1.5rem] border border-red-100">
+                                   <span className="text-[10px] font-bold text-red-600 uppercase tracking-widest block mb-2">Bạn chọn</span>
+                                   <p className="text-red-800 text-sm leading-relaxed font-medium">{yourAnswer?.a}</p>
+                                </div>
+                                <div className="bg-emerald-50 p-5 rounded-[1.5rem] border border-emerald-100">
+                                   <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest block mb-2">Đáp án đúng</span>
+                                   <p className="text-emerald-800 text-sm leading-relaxed font-medium">{correctAnswer?.a}</p>
+                                </div>
+                             </div>
+                          </div>
+                       );
+                    })}
+                 </div>
+              </div>
+           </div>
         </div>
       )}
+      
+      {/* Styles for animations */}
+      <style>{`
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          25% { transform: translateX(-5px); }
+          75% { transform: translateX(5px); }
+        }
+        .animate-shake {
+          animation: shake 0.4s ease-in-out;
+        }
+        .animate-fade-in-up {
+          animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .animate-fade-in-down {
+          animation: fadeInDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .animate-zoom-in {
+          animation: zoomIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(40px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInDown {
+          from { opacity: 0; transform: translateY(-40px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes zoomIn {
+          from { opacity: 0; transform: scale(0.9) translateY(20px); }
+          to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+      `}</style>
     </div>
   );
 }
