@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+// SỬA 1: Bỏ "React" khỏi import vì không dùng trực tiếp (chỉ dùng các hook)
+import { useState, useEffect, useRef } from 'react';
 
 // --- CẤU HÌNH DATA (GIỮ NGUYÊN) ---
 const RAW_DATA = [
@@ -107,7 +108,9 @@ function App() {
   const [checkedConnections, setCheckedConnections] = useState<Connection[]>([]);
   const [hintedIds, setHintedIds] = useState<Set<number>>(new Set());
   const [isChecked, setIsChecked] = useState(false);
-  const [updateTrigger, setUpdateTrigger] = useState(0); // Force update state
+  
+  // SỬA 2: Bỏ biến updateTrigger, chỉ lấy hàm set để force update
+  const [, setUpdateTrigger] = useState(0); 
   
   const [score, setScore] = useState(0);
   const [pageScore, setPageScore] = useState(0);
