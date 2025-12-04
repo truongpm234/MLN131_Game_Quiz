@@ -2,7 +2,17 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { QAPair } from '../types';
 
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY ||
+declare global {
+  interface ImportMetaEnv {
+    readonly VITE_GEMINI_API_KEY?: string;
+  }
+
+  interface ImportMeta {
+    readonly env: ImportMetaEnv;
+  }
+}
+
+const API_KEY = import.meta.env?.VITE_GEMINI_API_KEY ||
   (typeof process !== 'undefined' ? process.env?.API_KEY : undefined);
 
 const ai = API_KEY ? new GoogleGenAI({ apiKey: API_KEY }) : null;
