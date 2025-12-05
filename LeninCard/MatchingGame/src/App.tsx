@@ -460,7 +460,7 @@ function App() {
             ${isChecked ? 'opacity-50 cursor-not-allowed grayscale' : 'hover:bg-indigo-500 hover:border-indigo-500'}`}
         >
           <span className="bg-indigo-50 text-indigo-600 p-1 rounded-full group-hover:bg-white/20 group-hover:text-white transition-colors">💡</span>
-          <span>Gợi ý (-50đ)</span>
+          <span>AI gợi ý (-50đ)</span>
         </button>
         
         <button
