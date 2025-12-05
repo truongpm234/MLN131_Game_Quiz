@@ -9,6 +9,7 @@ from typing import List, Optional
 from backend.core.config import settings
 from backend.services.rag_service import rag_service
 from backend.core.exceptions import AIServiceError, VectorStoreError
+from backend.models.vector_store import vector_store # Import thêm vector_store để debug
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -41,10 +42,8 @@ class QuestionResponse(BaseModel):
 async def startup_event():
     """Initialize services on startup."""
     try:
-        # Kiểm tra xem đã init chưa để tránh làm lại không cần thiết gây timeout
         if not rag_service.initialized:
             print("⏳ Đang khởi động RAG Service...")
-            # Lưu ý: Trên Vercel Free, bước này có thể bị timeout nếu xử lý PDF quá lâu
             rag_service.initialize()
     except Exception as e:
         print(f"❌ Failed to initialize RAG service: {e}")
@@ -52,13 +51,35 @@ async def startup_event():
 @app.get("/api/health")
 async def health_check():
     """Health check endpoint."""
-    return {"status": "healthy", "service": settings.api_title}
+    return {
+        "status": "healthy", 
+        "service": settings.api_title,
+        "rag_initialized": rag_service.initialized
+    }
+
+@app.get("/api/debug")
+async def debug_system():
+    """Endpoint để kiểm tra xem hệ thống đã nạp được file chưa."""
+    docs_path = settings.docs_folder
+    study_path = os.path.join(docs_path, settings.study_file)
+    
+    return {
+        "rag_initialized": rag_service.initialized,
+        "total_chunks": len(rag_service.chunks),
+        "vector_store_ready": vector_store.is_initialized,
+        "paths": {
+            "configured_docs_path": docs_path,
+            "study_file_path": study_path,
+            "file_exists": os.path.exists(study_path),
+            "cwd": os.getcwd()
+        }
+    }
 
 @app.post("/api/ask", response_model=QuestionResponse)
 async def ask_question(request: QuestionRequest):
     """Ask a question and get AI-generated answer."""
     try:
-        # Đảm bảo RAG đã sẵn sàng
+        # Tự động init nếu chưa có
         if not rag_service.initialized:
              rag_service.initialize()
 
@@ -67,4 +88,6 @@ async def ask_question(request: QuestionRequest):
     except (AIServiceError, VectorStoreError) as e:
         raise HTTPException(status_code=500, detail=str(e))
     except Exception as e:
+        import traceback
+        traceback.print_exc() # In lỗi chi tiết ra terminal
         raise HTTPException(status_code=500, detail=f"Lỗi không xác định: {str(e)}")
