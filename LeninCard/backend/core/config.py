@@ -35,7 +35,7 @@ class Settings(BaseSettings):
     gemini_api_key: Optional[str] = None
     
     # Page offset for study file
-    study_file_page_offset: int = 57
+    study_file_page_offset: int = 1
     
     class Config:
         env_file = ".env"

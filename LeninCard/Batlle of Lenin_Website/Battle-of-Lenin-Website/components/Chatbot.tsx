@@ -124,9 +124,15 @@ const Chatbot: React.FC = () => {
                                             <p className="font-bold mb-1 uppercase tracking-wider text-[10px]">Nguồn tham khảo:</p>
                                             <ul className="list-disc pl-4 space-y-1">
                                                 {msg.sources.slice(0, 2).map((source: any, idx: number) => (
-                                                    <li key={idx} className="truncate">
-                                                        Trang {source.metadata?.page_number || '?'}: {source.page_content?.substring(0, 30)}...
-                                                    </li>
+                                                    (() => {
+                                                        const originalPage = source.metadata?.page_number;
+                                                        const correctedPage = typeof originalPage === 'number' ? originalPage : null;
+                                                        return (
+                                                            <li key={idx} className="truncate">
+                                                                Trang {correctedPage !== null && correctedPage > 0 ? correctedPage : '?'}: {source.page_content?.substring(0, 30)}...
+                                                            </li>
+                                                        );
+                                                    })()
                                                 ))}
                                             </ul>
                                         </div>
