@@ -19,8 +19,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy toàn bộ backend code
 COPY ./backend /app/backend/
 
-# Copy thư mục docs (chứa PDF)
-COPY ./docs /app/docs/
+# Tạo thư mục docs trống (sẽ mount volume hoặc copy PDF sau)
+RUN mkdir -p /app/docs
 
 # Tạo biến môi trường
 ENV PYTHONUNBUFFERED=1
