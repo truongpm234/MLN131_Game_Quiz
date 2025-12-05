@@ -9,6 +9,7 @@ import Footer from './components/Footer';
 import GuidePage from './components/GuidePage';
 import QuizPage from './components/QuizPage';
 import ResourcesPage from './components/ResourcesPage';
+import Chatbot from './components/Chatbot';
 
 const App: React.FC = () => {
   const [page, setPage] = useState('home');
@@ -37,7 +38,7 @@ const App: React.FC = () => {
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
   };
-  
+
   const navigate = (pageName: string) => {
     setPage(pageName);
     window.scrollTo(0, 0); // Scroll to top on page change
@@ -49,20 +50,35 @@ const App: React.FC = () => {
       : 'min-h-screen bg-gradient-to-br from-[#090b14] via-[#05060d] to-[#010104] text-gray-100';
 
   if (page === 'guide') {
-    return <GuidePage navigate={navigate} theme={theme} toggleTheme={toggleTheme} />;
+    return (
+      <>
+        <GuidePage navigate={navigate} theme={theme} toggleTheme={toggleTheme} />
+        <Chatbot />
+      </>
+    );
   }
 
   if (page === 'quiz') {
-    return <QuizPage navigate={navigate} theme={theme} toggleTheme={toggleTheme} />;
+    return (
+      <>
+        <QuizPage navigate={navigate} theme={theme} toggleTheme={toggleTheme} />
+        <Chatbot />
+      </>
+    );
   }
 
   if (page === 'resources') {
-    return <ResourcesPage navigate={navigate} theme={theme} toggleTheme={toggleTheme} />;
+    return (
+      <>
+        <ResourcesPage navigate={navigate} theme={theme} toggleTheme={toggleTheme} />
+        <Chatbot />
+      </>
+    );
   }
 
   return (
     <div className={mainClasses}>
-      <Navbar navigate={navigate} theme={theme} toggleTheme={toggleTheme}/>
+      <Navbar navigate={navigate} theme={theme} toggleTheme={toggleTheme} />
       <main>
         <Home navigate={navigate} />
         <About />
@@ -71,6 +87,7 @@ const App: React.FC = () => {
         <Contact />
       </main>
       <Footer />
+      <Chatbot />
     </div>
   );
 };
