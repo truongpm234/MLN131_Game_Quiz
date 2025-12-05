@@ -11,16 +11,19 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy file requirements.txt trước để tận dụng Docker cache
-COPY ./requirements.txt .
+# Copy file requirements.txt trước để tận dụng Docker cache
+COPY LeninCard/requirements.txt .
 
 # Cài đặt Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy toàn bộ backend code
-COPY ./backend /app/backend/
+# Copy toàn bộ backend code
+COPY LeninCard/backend /app/backend/
 
 # Copy thư mục docs (chứa PDF)
-COPY ./docs /app/docs/
+# Copy thư mục docs (chứa PDF)
+COPY LeninCard/docs /app/docs/
 
 # Tạo biến môi trường
 ENV PYTHONUNBUFFERED=1
