@@ -102,6 +102,9 @@ class RAGService:
         # Search for similar chunks
         indices, scores = vector_store.search(query_vector, top_k)
         contexts = [self.chunks[i] for i in indices]
+        print(f"🔍 Retrieved {len(contexts)} chunks for question: '{question}'")
+        for i, ctx in enumerate(contexts):
+            print(f"   [{i+1}] Source: {ctx['source']} (Page {ctx.get('page')}) - {ctx['text'][:50]}...")
         
         # Generate answer
         answer = ai_service.generate_response(question, contexts)

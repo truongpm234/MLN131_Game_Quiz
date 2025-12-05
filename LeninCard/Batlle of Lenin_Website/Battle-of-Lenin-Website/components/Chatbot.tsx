@@ -41,12 +41,13 @@ const Chatbot: React.FC = () => {
         setIsLoading(true);
 
         try {
-            const response = await fetch('http://localhost:8200/ask', {
+            const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8200';
+            const response = await fetch(`${apiUrl}/ask`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ question: userMessage.text, top_k: 3 }),
+                body: JSON.stringify({ question: userMessage.text }),
             });
 
             if (!response.ok) {
@@ -113,8 +114,8 @@ const Chatbot: React.FC = () => {
                             >
                                 <div
                                     className={`max-w-[85%] p-3 rounded-2xl text-sm shadow-sm ${msg.sender === 'user'
-                                            ? 'bg-brand-gold text-gray-900 rounded-tr-none font-medium'
-                                            : 'bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-tl-none border border-gray-100 dark:border-gray-600'
+                                        ? 'bg-brand-gold text-gray-900 rounded-tr-none font-medium'
+                                        : 'bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-tl-none border border-gray-100 dark:border-gray-600'
                                         }`}
                                 >
                                     <p className="whitespace-pre-wrap leading-relaxed">{msg.text}</p>
