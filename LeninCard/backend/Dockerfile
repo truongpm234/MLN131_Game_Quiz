@@ -11,16 +11,16 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy file requirements.txt trước để tận dụng Docker cache
-COPY ../requirements.txt .
+COPY ./requirements.txt .
 
 # Cài đặt Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy toàn bộ backend code
-COPY . /app/backend/
+COPY ./backend /app/backend/
 
 # Copy thư mục docs (chứa PDF)
-COPY ../docs /app/docs/
+COPY ./docs /app/docs/
 
 # Tạo biến môi trường
 ENV PYTHONUNBUFFERED=1
