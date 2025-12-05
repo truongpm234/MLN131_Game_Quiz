@@ -237,7 +237,7 @@ const Quiz: React.FC = () => {
     let borderColorClass = 'border-gray-400 dark:border-gray-500';
 
     if (percentage >= 90) {
-      message = "Xuất sắc! Bạn là một bậc thầy Battle Of LeNin!";
+      message = "Xuất sắc! Bạn là một bậc thầy Lenin Card!";
       colorClass = 'text-brand-gold';
       borderColorClass = 'border-brand-gold';
     } else if (percentage >= 70) {

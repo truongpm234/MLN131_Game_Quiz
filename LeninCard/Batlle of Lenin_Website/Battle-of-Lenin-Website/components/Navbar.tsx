@@ -18,8 +18,7 @@ const navLinks: NavLink[] = [
   { href: '#home', label: 'Home' },
   { href: '#about', label: 'Giới thiệu' },
   { href: '#development', label: 'Phát triển' },
-  { href: '#news', label: 'Tin tức' },
-  { href: '#contact', label: 'Đăng ký' },
+  { href: '#news', label: 'Nội dung' },
   { href: 'resources', label: 'Tài Nguyên' },
   { href: 'guide', label: 'Hướng dẫn' }
 ];
@@ -83,13 +82,14 @@ const Navbar: React.FC<NavbarProps> = ({ navigate, theme, toggleTheme }) => {
             onClick={(e) => handleLinkClick(e, '#home')}
             className="group flex items-center gap-3 text-2xl font-semibold text-gray-900 dark:text-white uppercase tracking-[0.35em] transition-transform duration-300 hover:scale-[1.02]"
           >
+            {/* Đã sửa: Thêm rounded-full và object-cover */}
             <img
               src="/logo/logo.png"
-              alt="Battle Of LeNin Logo"
-              className="w-12 h-12 object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.45)] transition-transform duration-300 group-hover:scale-110"
+              alt="Đại Đồng Logo"
+              className="w-12 h-12 rounded-full object-cover drop-shadow-[0_10px_20px_rgba(0,0,0,0.45)] transition-transform duration-300 group-hover:scale-110"
             />
-            <span className="tracking-[0.3em]">
-              Battle Of <span className="text-brand-gold">LeNin</span>
+            <span className="tracking-[0.1em]">
+              Đại <span className="text-brand-gold">Đồng</span>
             </span>
           </a>
 
@@ -113,13 +113,6 @@ const Navbar: React.FC<NavbarProps> = ({ navigate, theme, toggleTheme }) => {
 
           {/* Actions */}
           <div className="flex items-center gap-4">
-            <a
-              href="#contact"
-              onClick={(e) => handleLinkClick(e, '#contact')}
-              className="hidden lg:inline-flex items-center justify-center rounded-full border border-brand-gold/40 bg-brand-gold/90 px-5 py-2 text-sm font-semibold text-gray-900 shadow-brand-gold/40 shadow-lg transition-all duration-300 hover:bg-amber-400 hover:shadow-xl"
-            >
-              Đăng ký sớm
-            </a>
             <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
           </div>
 
@@ -153,13 +146,6 @@ const Navbar: React.FC<NavbarProps> = ({ navigate, theme, toggleTheme }) => {
                 {link.label}
               </a>
             ))}
-            <a
-              href="#contact"
-              className="w-[85%] rounded-full border border-brand-gold/30 bg-brand-gold/90 py-3 text-center text-sm font-semibold text-gray-900 shadow-lg transition-all duration-300 hover:bg-amber-400"
-              onClick={(e) => handleLinkClick(e, '#contact')}
-            >
-              Đăng ký sớm
-            </a>
           </div>
         </div>
       )}

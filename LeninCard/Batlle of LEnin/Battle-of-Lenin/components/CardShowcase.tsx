@@ -32,124 +32,115 @@ const CARD_IMAGE_META: Record<
   }
 > = {
   'card 1.png': {
-    title: 'Ngày Quốc tế Lao động',
+    title: 'Khái niệm Dân tộc (Phần I-1)',
     description:
-      'Hình tờ lịch vàng cam với dòng chữ “1 MAY”, phong cách minh họa cổ điển và nền tỏa sáng dạng tia.',
+      'Tập hợp người ổn định, hình thành lâu dài trong lịch sử, có chung ngôn ngữ, lãnh thổ, đời sống kinh tế và bản sắc văn hóa.',
   },
-  'card 2.jpg': {
-    title: 'C.Mác',
+  'card 2.png': {
+    title: 'Đặc trưng Dân tộc (Phần I-2)',
     description:
-      'Hình tượng nhà triết học – tư tưởng có ảnh hưởng lớn, nét vẽ đậm chất chân dung lịch sử.',
+      'Gồm các đặc trưng: Cộng đồng về ngôn ngữ, lãnh thổ, kinh tế và văn hóa, tâm lý, ý thức tự giác dân tộc.',
   },
+  // Phần II: Chủ nghĩa Mác - Lênin về Dân tộc
   'card 3.png': {
-    title: 'Nhiệm vụ Bùng Nổ',
+    title: 'Chủ nghĩa Mác - Lênin về Dân tộc (Phần II)',
     description:
-      'Biểu tượng ngọn lửa vàng cam với chữ “BANG CHÁY”, cảm giác sự kiện hoặc thử thách đặc biệt.',
+      'Quan điểm về giải quyết vấn đề dân tộc trong thời kỳ quá độ lên Chủ nghĩa Xã hội, nhấn mạnh quyền bình đẳng và đoàn kết dân tộc.',
   },
-  'card 4.jpg': {
-    title: 'Biểu trưng Công – Nông',
+  'card 4.png': {
+    title: 'Nội dung Cương lĩnh Dân tộc',
     description:
-      'Búa và liềm vàng đặt chéo nhau trên nền đỏ – vàng rực, giống phong cách cổ động truyền thống.',
+      'Ba nội dung cơ bản: Các dân tộc hoàn toàn bình đẳng; Các dân tộc được quyền tự quyết; Liên hiệp công nhân tất cả các dân tộc.',
   },
+  // Phần III: Dân tộc và quan hệ dân tộc ở Việt Nam
   'card 5.png': {
-    title: 'Ngọn Đuốc Tự Do',
+    title: 'Đặc điểm Dân tộc Việt Nam (Phần III-1)',
     description:
-      'Ngọn đuốc bốc lửa vàng trên nền đỏ tỏa tia sáng, biểu tượng cho ý chí và ánh sáng dẫn đường.',
+      'Đặc điểm nổi bật: Cộng đồng 54 dân tộc anh em, có sự đan xen sinh sống, cùng chung lòng yêu nước, đoàn kết và phát triển.',
   },
-  'card 6.jpg': {
-    title: 'Thẻ Sự Kiện',
-    description: 'Thiết kế viền vàng cùng nền hoa văn cổ động, gợi nhắc các bảng thông báo đặc biệt.',
+  'card 6.png': {
+    title: 'Dân tộc đa số (Kinh) và thiểu số',
+    description:
+      'Sự khác biệt về dân số, trình độ phát triển kinh tế - xã hội giữa nhóm dân tộc đa số (Kinh) và các dân tộc thiểu số.',
   },
   'card 7.png': {
-    title: 'Thẻ Phần Thưởng',
+    title: 'Quan điểm Đảng về Dân tộc (Phần III-2)',
     description:
-      'Hộp quà đỏ thắt nơ vàng phát sáng nhẹ, phù hợp cho vật phẩm thưởng hoặc mở rương.',
+      'Quan điểm nhất quán của Đảng: Vấn đề dân tộc và đoàn kết dân tộc là vấn đề chiến lược cơ bản, lâu dài của cách mạng Việt Nam.',
   },
   'card 8.png': {
-    title: 'Phong trào Quần Chúng',
+    title: 'Chính sách Dân tộc (Phần III-3)',
     description:
-      'Đám đông giơ tay và cầm cờ lớn, tông đỏ – vàng cổ điển tạo khí thế vận động mạnh mẽ.',
+      'Các chính sách của Đảng và Nhà nước nhằm phát triển toàn diện, nâng cao đời sống vật chất, tinh thần của đồng bào các dân tộc thiểu số.',
   },
   'card 9.png': {
-    title: 'Thẻ Kim Cương',
+    title: 'Vấn đề Tôn giáo trong Quá độ',
     description:
-      'Viên kim cương vàng óng phát sáng rực rỡ, biểu tượng cho phần thưởng hiếm và giá trị cao.',
+      'Tôn giáo còn tồn tại lâu dài, là nhu cầu tinh thần của một bộ phận nhân dân. Đảng, Nhà nước tôn trọng quyền tự do tín ngưỡng, không tín ngưỡng.',
   },
-  'card 10.jpg': {
-    title: 'Lê Nin',
+  'card 10.png': {
+    title: 'Chính sách Tôn giáo',
     description:
-      'Chân dung minh họa nhà lãnh đạo cách mạng với thần thái kiên định, biểu tượng quen thuộc.',
+      'Chính sách đoàn kết đồng bào có đạo và không có đạo, phát huy giá trị văn hóa, đạo đức tốt đẹp của các tôn giáo, ngăn chặn lợi dụng tôn giáo.',
   },
-  'card 11.jpg': {
-    title: 'Ngày Trọng Điểm',
+  'card 11.png': {
+    title: 'Mối quan hệ Dân tộc - Tôn giáo',
     description:
-      'Thẻ gợi ý một mốc lịch sử đặc biệt, thể hiện sự quan trọng của sự kiện hoặc ngày kỷ niệm.',
+      'Mối quan hệ phức tạp, đan xen. Vấn đề dân tộc và tôn giáo thường gắn liền với nhau trong quá trình xây dựng Chủ nghĩa Xã hội.',
   },
-  'card 12.jpg': {
-    title: 'Tuyên Truyền 1',
+  'card 12.png': {
+    title: 'Liên minh Công nông',
     description:
-      'Loa vàng kiểu cổ điển trên nền đỏ rực tỏa sáng, biểu tượng cho thông điệp lan tỏa mạnh mẽ.',
+      'Nền tảng của khối đại đoàn kết toàn dân tộc, dưới sự lãnh đạo của Đảng Cộng sản, nhằm xây dựng thành công Chủ nghĩa Xã hội.',
   },
+  // Card 13-18: Mở rộng chi tiết
   'card 13.png': {
-    title: 'Tuyên Truyền 2',
+    title: 'Nguyên tắc Bình đẳng Dân tộc',
     description:
-      'Loa phóng thanh góc nhìn hơi nghiêng, có thể dùng như biến thể hoặc cấp độ khác của thẻ loa.',
+      'Đảm bảo quyền lợi và nghĩa vụ ngang nhau giữa các dân tộc, xóa bỏ mọi sự kì thị, áp bức dân tộc, bất kể dân tộc đa số hay thiểu số.',
   },
-  'card 14.jpg': {
-    title: 'Đoàn Kết',
+  'card 14.png': {
+    title: 'Nguyên tắc Tự quyết Dân tộc',
     description:
-      'Ba cánh tay giơ cao đầy quyết tâm, thể hiện sức mạnh tập thể và tinh thần chiến đấu chung.',
+      'Quyền làm chủ vận mệnh của dân tộc mình, tự quyết định con đường phát triển. Lưu ý: Không bao gồm quyền ly khai thành quốc gia riêng biệt.',
   },
-  'card 15.jpg': {
-    title: 'Ăn Mừng',
+  'card 15.png': {
+    title: 'Mục tiêu Giải quyết Vấn đề Dân tộc',
     description:
-      'Ba chùm pháo hoa đỏ – vàng tạo không khí lễ hội, phù hợp cho sự kiện nâng điểm hay phần thưởng.',
+      'Thực hiện bình đẳng, đoàn kết, tương trợ giữa các dân tộc, cùng nhau phát triển và bảo vệ Tổ quốc Việt Nam Xã hội Chủ nghĩa.',
   },
-  'card 16.jpg': {
-    title: 'Giáo Trình Lý Luận',
+  'card 16.png': {
+    title: 'Các thế lực lợi dụng Dân tộc/Tôn giáo',
     description:
-      'Cuốn sách đỏ có biểu tượng búa liềm và dòng chữ “CHỦ NGHĨA CỘNG SẢN”, tượng trưng tri thức nền tảng.',
+      'Cảnh giác và đấu tranh kiên quyết với âm mưu, thủ đoạn của các thế lực thù địch lợi dụng vấn đề dân tộc, tôn giáo để gây chia rẽ, chống phá cách mạng.',
   },
-  'card 17.jpg': {
-    title: 'Ngôi Sao Vàng',
+  'card 17.png': {
+    title: 'Tôn trọng Tự do Tín ngưỡng',
     description:
-      'Ngôi sao vàng năm cánh nổi bật trên nền đỏ, gợi sự vinh danh, thành tựu hoặc quyền lợi đặc biệt.',
+      'Tôn trọng và bảo hộ quyền tự do tín ngưỡng, tôn giáo và quyền không tín ngưỡng, tôn giáo của mọi công dân. Mọi tôn giáo đều bình đẳng trước pháp luật.',
   },
   'card 18.png': {
-    title: 'Biểu Tượng Danh Dự',
+    title: 'Phát huy Bản sắc Văn hóa',
     description:
-      'Biến thể ngôi sao vàng sắc nét và tỏa sáng hơn, thích hợp làm thẻ cấp cao hay điểm số đặc biệt.',
+      'Chính sách bảo tồn và phát huy những giá trị văn hóa, phong tục, tập quán tốt đẹp, tiếng nói, chữ viết của từng dân tộc thiểu số.',
   },
-  'card 19.jpg': {
-    title: 'Mốc Sự Kiện 5',
-    description:
-      'Số 5 lớn trên nền đỏ, có thể đại diện cấp độ, điểm thưởng hoặc gợi nhớ tháng 5 – ngày Lao động.',
-  },
-  'card 20.png': {
-    title: 'Sự Kiện Lớn',
-    description:
-      'Biểu ngữ đỏ – vàng với chữ “SỰ KIỆN”, tượng trưng cho hoạt động, nhiệm vụ hay thử thách nổi bật.',
-  },
-  'card 21.jpg': {
-    title: 'Chiến Xa',
-    description:
-      'Xe tăng vàng – nâu trên nền đỏ tỏa tia sáng, biểu tượng của sức mạnh, đột phá và ý chí tiến công.',
-  },
-  'card 22.png': {
-    title: 'Vé May Mắn',
-    description:
-      'Tấm vé cam – đỏ với chữ “TICKET”, gợi ý cơ hội, lượt chơi bổ sung hoặc sự kiện bí ẩn.',
-  },
-  'card 23.jpg': {
-    title: 'Vinh Quang',
-    description:
-      'Lá cờ đỏ in chữ “VINH QUANG”, mang tinh thần chiến thắng và tôn vinh thành tích đặc biệt.',
-  },
-  'card 24.jpg': {
-    title: 'Tài Nguyên',
-    description:
-      'Đồng xu vàng có ký hiệu “$” trên nền đỏ tỏa sáng, tượng trưng cho tài sản, điểm thưởng hay kinh tế.',
-  },
+};
+
+// Đường dẫn mặc định nếu lấy từ public/images.
+const getCardImage = (src: string | undefined) => {
+  if (!src) return COVER_IMAGE;
+  // Nếu src đã bắt đầu bằng '/', giữ nguyên
+  if (src.startsWith('/')) return src;
+  // Nếu src không bắt đầu bằng '/', ưu tiên lấy từ alias @images.
+  try {
+    // import.meta.glob chỉ hoạt động khi chạy dev/build Vite với asset trong src, KHÔNG dùng cho public/images.
+    // import images only with @images alias (khi đã setup alias)
+    // Nếu muốn import runtime qua @images/card 1.png, cần setup alias trong vite.config và tsconfig
+    // Nếu không setup, vẫn fallback về /images/
+    return require(`@images/${src}`);
+  } catch {
+    return `/images/${src}`;
+  }
 };
 
 const CardShowcase: React.FC<CardShowcaseProps> = ({
@@ -478,6 +469,22 @@ const CardShowcase: React.FC<CardShowcaseProps> = ({
         {showQuestionForm && (
           <div className="fixed inset-0 flex items-center justify-center p-4">
             <div className="w-full max-w-4xl bg-[#080808] border border-white/10 rounded-3xl shadow-2xl text-white p-6 space-y-6 relative">
+              {/* >>> Hình nhỏ căn giữa phía trên câu hỏi <<< */}
+              <div className="w-full flex justify-center mb-4">
+                {(card.imageSrc && card.imageSrc !== "") ? (
+                  <img
+                    src={getCardImage(card.imageSrc)}
+                    alt={card.content}
+                    className="h-24 max-w-xs object-contain rounded-xl border border-white/10 bg-black"
+                    onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = COVER_IMAGE; e.currentTarget.alt = 'Không có hình ảnh'; }}
+                    draggable={false}
+                  />
+                ) : (
+                  <div className="h-24 w-36 flex items-center justify-center bg-gray-800 text-gray-300 rounded-xl border border-white/10">
+                    Không có hình ảnh
+                  </div>
+                )}
+              </div>
               <div className="space-y-2">
                 <p className="text-xs uppercase tracking-[0.35em] text-red-300">
                   Trắc nghiệm tập thể
