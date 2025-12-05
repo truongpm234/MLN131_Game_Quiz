@@ -41,7 +41,7 @@ const Chatbot: React.FC = () => {
         setIsLoading(true);
 
         try {
-            const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8200/api';
+            const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
             const response = await fetch(`${apiUrl}/ask`, {
                 method: 'POST',
                 headers: {

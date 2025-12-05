@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: backend/Dockerfile
+    container_name: lenincard_backend
+    ports:
+      - "8000:8000"
+    environment:
+      - GEMINI_API_KEY=....
+    volumes:
+      # Mount code để development (có thể bỏ khi production)
+      - ./:/app/backend/
+      - ../docs:/app/docs/
+    restart: unless-stopped
+    networks:
+      - lenincard_network
+
+networks:
+  lenincard_network:
+    driver: bridge
