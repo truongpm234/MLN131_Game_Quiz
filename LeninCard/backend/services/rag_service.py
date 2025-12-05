@@ -18,9 +18,16 @@ class RAGService:
     
     def _load_documents(self) -> None:
         """Load and process documents."""
-        docs_folder = os.path.join(os.getcwd(), settings.docs_folder)
+        # Sử dụng đường dẫn tuyệt đối đã cấu hình trong settings
+        docs_folder = settings.docs_folder
+        
         if not os.path.exists(docs_folder):
-            raise FileNotFoundError(f"Docs folder not found: {docs_folder}")
+            # Fallback: Thử tìm tương đối nếu deploy structure khác biệt
+            fallback_path = os.path.join(os.getcwd(), "docs")
+            if os.path.exists(fallback_path):
+                docs_folder = fallback_path
+            else:
+                raise FileNotFoundError(f"Docs folder not found at: {docs_folder}")
         
         all_docs = []
         
