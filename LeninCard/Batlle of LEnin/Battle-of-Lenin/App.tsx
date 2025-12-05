@@ -1,14 +1,21 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import GameBoard from './components/GameBoard';
-import MainMenu from './components/MainMenu';
-import Lobby from './components/Lobby';
-import InstructionsModal from './components/InstructionsModal';
-import Dashboard from './components/Dashboard';
-import PlayerList from './components/PlayerList';
-import CardShowcase from './components/CardShowcase';
-import { CardData, QAPair, Player, CardOriginRect, QuestionForm, QuizResult } from './types';
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import GameBoard from "./components/GameBoard";
+import MainMenu from "./components/MainMenu";
+import Lobby from "./components/Lobby";
+import InstructionsModal from "./components/InstructionsModal";
+import Dashboard from "./components/Dashboard";
+import PlayerList from "./components/PlayerList";
+import CardShowcase from "./components/CardShowcase";
+import {
+  CardData,
+  QAPair,
+  Player,
+  CardOriginRect,
+  QuestionForm,
+  QuizResult,
+} from "./types";
 
-type View = 'menu' | 'lobby' | 'playing' | 'finished' | 'instructions';
+type View = "menu" | "lobby" | "playing" | "finished" | "instructions";
 type FocusedCardState = {
   card: CardData;
   origin: CardOriginRect | null;
@@ -25,38 +32,40 @@ const shuffleArray = <T,>(array: T[]): T[] => {
 };
 
 const CARD_IMAGE_FILES = [
-  'card 1.png',
-  'card 2.png',
-  'card 3.png',
-  'card 4.png',
-  'card 5.png',
-  'card 6.png',
-  'card 7.png',
-  'card 8.png',
-  'card 9.png',
-  'card 10.png',
-  'card 11.png',
-  'card 12.png',
-  'card 13.png',
-  'card 14.png',
-  'card 15.png',
-  'card 16.png',
-  'card 17.png',
-  'card 18.png',
+  "card 1.png",
+  "card 2.png",
+  "card 3.png",
+  "card 4.png",
+  "card 5.png",
+  "card 6.png",
+  "card 7.png",
+  "card 8.png",
+  "card 9.png",
+  "card 10.png",
+  "card 11.png",
+  "card 12.png",
+  "card 13.png",
+  "card 14.png",
+  "card 15.png",
+  "card 16.png",
+  "card 17.png",
+  "card 18.png",
 ];
-const CARD_IMAGE_PATHS = CARD_IMAGE_FILES.map((name) => `/images/${encodeURIComponent(name)}`);
+const CARD_IMAGE_PATHS = CARD_IMAGE_FILES.map(
+  (name) => `/images/${encodeURIComponent(name)}`
+);
 
-const VIEW_SOUNDTRACKS: Record<View, string> = {
-  menu: '/audio/Soundtrack1.mp3',
-  lobby: '/audio/Soundtrack1.mp3',
-  playing: '/audio/Soundtrack3.mp3',
-  finished: '/audio/Soundtrack3.mp3',
-  instructions: '/audio/Soundtrack1.mp3',
-};
+// const VIEW_SOUNDTRACKS: Record<View, string> = {
+//   menu: '/audio/Soundtrack1.mp3',
+//   lobby: '/audio/Soundtrack1.mp3',
+//   playing: '/audio/Soundtrack3.mp3',
+//   finished: '/audio/Soundtrack3.mp3',
+//   instructions: '/audio/Soundtrack1.mp3',
+// };
 
 const App: React.FC = () => {
-  const [view, setView] = useState<View>('menu');
-  const [previousView, setPreviousView] = useState<View>('menu');
+  const [view, setView] = useState<View>("menu");
+  const [previousView, setPreviousView] = useState<View>("menu");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [cards, setCards] = useState<CardData[]>([]);
   const [flippedCards, setFlippedCards] = useState<CardData[]>([]);
@@ -70,47 +79,47 @@ const App: React.FC = () => {
   const [quizBank, setQuizBank] = useState<QuestionForm[]>([]);
   const [quizError, setQuizError] = useState<string | null>(null);
   const quizDeckRef = useRef<QuestionForm[]>([]);
-  const backgroundAudioRef = useRef<HTMLAudioElement | null>(null);
-  const backgroundTrackRef = useRef<string | null>(null);
-  const stopBackgroundAudio = useCallback(() => {
-    if (backgroundAudioRef.current) {
-      backgroundAudioRef.current.pause();
-      backgroundAudioRef.current.currentTime = 0;
-      backgroundAudioRef.current = null;
-      backgroundTrackRef.current = null;
-    }
-  }, []);
-  const playBackgroundAudio = useCallback(
-    (src: string) => {
-      if (backgroundTrackRef.current === src && backgroundAudioRef.current) {
-        if (backgroundAudioRef.current.paused) {
-          backgroundAudioRef.current.play().catch(() => {});
-        }
-        return;
-      }
+  // const backgroundAudioRef = useRef<HTMLAudioElement | null>(null);
+  // const backgroundTrackRef = useRef<string | null>(null);
+  // const stopBackgroundAudio = useCallback(() => {
+  //   if (backgroundAudioRef.current) {
+  //     backgroundAudioRef.current.pause();
+  //     backgroundAudioRef.current.currentTime = 0;
+  //     backgroundAudioRef.current = null;
+  //     backgroundTrackRef.current = null;
+  //   }
+  // }, []);
+  // const playBackgroundAudio = useCallback(
+  //   (src: string) => {
+  //     if (backgroundTrackRef.current === src && backgroundAudioRef.current) {
+  //       if (backgroundAudioRef.current.paused) {
+  //         backgroundAudioRef.current.play().catch(() => {});
+  //       }
+  //       return;
+  //     }
 
-      stopBackgroundAudio();
-      const audio = new Audio(src);
-      audio.loop = true;
-      audio.volume = 0.35;
-      backgroundAudioRef.current = audio;
-      backgroundTrackRef.current = src;
-      audio.play().catch(() => {});
-    },
-    [stopBackgroundAudio],
-  );
+  //     stopBackgroundAudio();
+  //     const audio = new Audio(src);
+  //     audio.loop = true;
+  //     audio.volume = 0.35;
+  //     backgroundAudioRef.current = audio;
+  //     backgroundTrackRef.current = src;
+  //     audio.play().catch(() => {});
+  //   },
+  //   [stopBackgroundAudio],
+  // );
 
   useEffect(() => {
     const loadQuiz = async () => {
       try {
-        const response = await fetch('/data/Quiz.json');
+        const response = await fetch("/data/Quiz.json");
         if (!response.ok) {
-          throw new Error('Failed to load quiz data');
+          throw new Error("Failed to load quiz data");
         }
-        const data = await response.json() as QuestionForm[];
+        const data = (await response.json()) as QuestionForm[];
         setQuizBank(data);
       } catch (err) {
-        setQuizError('Không thể tải dữ liệu câu hỏi. Vui lòng thử lại.');
+        setQuizError("Không thể tải dữ liệu câu hỏi. Vui lòng thử lại.");
       }
     };
     loadQuiz();
@@ -127,29 +136,29 @@ const App: React.FC = () => {
     }
     return quizDeckRef.current.shift() ?? null;
   }, [quizBank]);
-  useEffect(() => {
-    if (focusedCard) {
-      stopBackgroundAudio();
-      return;
-    }
-    const targetTrack = VIEW_SOUNDTRACKS[view];
-    if (targetTrack) {
-      playBackgroundAudio(targetTrack);
-    } else {
-      stopBackgroundAudio();
-    }
-  }, [view, focusedCard, playBackgroundAudio, stopBackgroundAudio]);
-  useEffect(() => () => stopBackgroundAudio(), [stopBackgroundAudio]);
+  // useEffect(() => {
+  //   if (focusedCard) {
+  //     stopBackgroundAudio();
+  //     return;
+  //   }
+  //   const targetTrack = VIEW_SOUNDTRACKS[view];
+  //   if (targetTrack) {
+  //     playBackgroundAudio(targetTrack);
+  //   } else {
+  //     stopBackgroundAudio();
+  //   }
+  // }, [view, focusedCard, playBackgroundAudio, stopBackgroundAudio]);
+  // useEffect(() => () => stopBackgroundAudio(), [stopBackgroundAudio]);
 
   const CARD_COUNT = 9; // Number of pairs (24 cards total)
 
   const buildPairsFromQuiz = useCallback(
     (count: number): QAPair[] => {
       const validQuestions = quizBank.filter((question) =>
-        question.answers.some((answer) => answer.correct),
+        question.answers.some((answer) => answer.correct)
       ) as QuestionForm[];
       if (validQuestions.length === 0) {
-        throw new Error('Bộ câu hỏi chưa sẵn sàng hoặc thiếu đáp án đúng.');
+        throw new Error("Bộ câu hỏi chưa sẵn sàng hoặc thiếu đáp án đúng.");
       }
 
       const pool: QuestionForm[] = [];
@@ -160,7 +169,9 @@ const App: React.FC = () => {
       return pool.slice(0, count).map((question) => {
         const correctAnswer = question.answers.find((answer) => answer.correct);
         if (!correctAnswer) {
-          throw new Error(`Câu hỏi "${question.content}" không có đáp án đúng.`);
+          throw new Error(
+            `Câu hỏi "${question.content}" không có đáp án đúng.`
+          );
         }
         return {
           question: question.content,
@@ -168,14 +179,14 @@ const App: React.FC = () => {
         };
       });
     },
-    [quizBank],
+    [quizBank]
   );
 
   const createGameBoard = (qaPairs: QAPair[]) => {
     const requiredCards = qaPairs.length * 2;
     const availableImages = shuffleArray(CARD_IMAGE_PATHS);
     if (availableImages.length < requiredCards) {
-      throw new Error('Không đủ ảnh để tạo bộ bài.');
+      throw new Error("Không đủ ảnh để tạo bộ bài.");
     }
     const gameCards: CardData[] = [];
     qaPairs.forEach((pair, index) => {
@@ -184,7 +195,7 @@ const App: React.FC = () => {
       gameCards.push({
         id: `q-${index}`,
         pairId: index,
-        type: 'question',
+        type: "question",
         content: pair.question,
         imageSrc: questionImageSrc,
         isFlipped: false,
@@ -194,7 +205,7 @@ const App: React.FC = () => {
       gameCards.push({
         id: `a-${index}`,
         pairId: index,
-        type: 'answer',
+        type: "answer",
         content: pair.answer,
         imageSrc: answerImageSrc,
         isFlipped: false,
@@ -205,40 +216,48 @@ const App: React.FC = () => {
     setCards(shuffleArray(gameCards));
   };
 
-  const handleStartGame = useCallback((playerNames: string[]) => {
-    if (playerNames.length === 0) {
-      setError("Cần có ít nhất một người chơi để bắt đầu!");
-      return;
-    }
-    setIsLoading(true);
-    setError(null);
-    setCards([]);
-    setMoves(0);
-    setWrongAnswers(0);
-    setFlippedCards([]);
-    setCurrentPlayerIndex(0);
-    const initialPlayers = playerNames.map((name, index) => ({ id: index, name, score: 0 }));
-    setPlayers(initialPlayers);
-    if (initialPlayers.length > 0) {
-      setCurrentPlayerIndex(Math.floor(Math.random() * initialPlayers.length));
-    }
+  const handleStartGame = useCallback(
+    (playerNames: string[]) => {
+      if (playerNames.length === 0) {
+        setError("Cần có ít nhất một người chơi để bắt đầu!");
+        return;
+      }
+      setIsLoading(true);
+      setError(null);
+      setCards([]);
+      setMoves(0);
+      setWrongAnswers(0);
+      setFlippedCards([]);
+      setCurrentPlayerIndex(0);
+      const initialPlayers = playerNames.map((name, index) => ({
+        id: index,
+        name,
+        score: 0,
+      }));
+      setPlayers(initialPlayers);
+      if (initialPlayers.length > 0) {
+        setCurrentPlayerIndex(
+          Math.floor(Math.random() * initialPlayers.length)
+        );
+      }
 
-    try {
-      const pairs = buildPairsFromQuiz(CARD_COUNT);
-      createGameBoard(pairs);
-      setView('playing');
-    } catch (e: any) {
-      setError(e.message || "Không thể tạo bộ câu hỏi từ Quiz.json.");
-      setView('lobby'); // Go back to lobby on error
-    } finally {
-      setIsLoading(false);
-    }
-  }, [buildPairsFromQuiz]);
-  
+      try {
+        const pairs = buildPairsFromQuiz(CARD_COUNT);
+        createGameBoard(pairs);
+        setView("playing");
+      } catch (e: any) {
+        setError(e.message || "Không thể tạo bộ câu hỏi từ Quiz.json.");
+        setView("lobby"); // Go back to lobby on error
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [buildPairsFromQuiz]
+  );
+
   const handleRestartGame = useCallback(() => {
-    handleStartGame(players.map(p => p.name));
+    handleStartGame(players.map((p) => p.name));
   }, [players, handleStartGame]);
-
 
   const pickRandomChooser = useCallback(() => {
     if (!players.length) return;
@@ -247,33 +266,40 @@ const App: React.FC = () => {
 
   const handleCardClick = (clickedCard: CardData) => {
     // Chỉ đếm những thẻ chưa completed trong flippedCards
-    const activeFlippedCards = flippedCards.filter(card => !card.isCompleted);
-    if (isChecking || clickedCard.isFlipped || clickedCard.isMatched || activeFlippedCards.length >= 2) {
+    const activeFlippedCards = flippedCards.filter((card) => !card.isCompleted);
+    if (
+      isChecking ||
+      clickedCard.isFlipped ||
+      clickedCard.isMatched ||
+      activeFlippedCards.length >= 2
+    ) {
       return;
     }
     const newFlippedCards = [...flippedCards, clickedCard];
     setFlippedCards(newFlippedCards);
-    setCards(prev => prev.map(c => c.id === clickedCard.id ? { ...c, isFlipped: true } : c));
+    setCards((prev) =>
+      prev.map((c) => (c.id === clickedCard.id ? { ...c, isFlipped: true } : c))
+    );
   };
-  
+
   const handleCardReveal = (card: CardData, origin: CardOriginRect | null) => {
     const quiz = drawQuizQuestion();
     if (!quiz) {
-      setError(quizError ?? 'Đang tải câu hỏi, hãy thử lại sau.');
+      setError(quizError ?? "Đang tải câu hỏi, hãy thử lại sau.");
       return;
     }
     setFocusedCard({ card, origin, quiz });
   };
 
   const handleReturnToMenu = () => {
-    setView('menu');
+    setView("menu");
     setError(null);
     setPlayers([]);
-  }
+  };
 
   const handleShowInstructions = useCallback(() => {
     setPreviousView(view);
-    setView('instructions');
+    setView("instructions");
   }, [view]);
 
   const handleCloseInstructions = useCallback(() => {
@@ -281,55 +307,79 @@ const App: React.FC = () => {
   }, [previousView]);
 
   const handleEnterLobby = () => {
-    setView('lobby');
+    setView("lobby");
   };
 
-  const handlePlayerQuizResult = useCallback((playerId: number, result: QuizResult) => {
-    setPlayers(prevPlayers =>
-      prevPlayers.map(player =>
-        player.id === playerId ? { ...player, score: player.score + result.points } : player
-      )
-    );
-    // Tăng wrongAnswers nếu người chơi hiện tại trả lời sai
-    if (!result.correct && playerId === currentPlayerIndex) {
-      setWrongAnswers(prev => prev + 1);
-    }
-  }, [currentPlayerIndex]);
+  const handlePlayerQuizResult = useCallback(
+    (playerId: number, result: QuizResult) => {
+      setPlayers((prevPlayers) =>
+        prevPlayers.map((player) =>
+          player.id === playerId
+            ? { ...player, score: player.score + result.points }
+            : player
+        )
+      );
+      // Tăng wrongAnswers nếu người chơi hiện tại trả lời sai
+      if (!result.correct && playerId === currentPlayerIndex) {
+        setWrongAnswers((prev) => prev + 1);
+      }
+    },
+    [currentPlayerIndex]
+  );
 
-  const handleQuizComplete = useCallback((cardId: string) => {
-    setCards(prev =>
-      prev.map(card =>
-        card.id === cardId ? { ...card, isFlipped: true, isCompleted: true } : card
-      )
-    );
-    // Xóa thẻ đã completed khỏi flippedCards để không ảnh hưởng logic kiểm tra cặp
-    setFlippedCards(prev => prev.filter(card => card.id !== cardId));
-    setFocusedCard(null);
-    pickRandomChooser();
-  }, [pickRandomChooser]);
+  const handleQuizComplete = useCallback(
+    (cardId: string) => {
+      setCards((prev) =>
+        prev.map((card) =>
+          card.id === cardId
+            ? { ...card, isFlipped: true, isCompleted: true }
+            : card
+        )
+      );
+      // Xóa thẻ đã completed khỏi flippedCards để không ảnh hưởng logic kiểm tra cặp
+      setFlippedCards((prev) => prev.filter((card) => card.id !== cardId));
+      setFocusedCard(null);
+      pickRandomChooser();
+    },
+    [pickRandomChooser]
+  );
 
   useEffect(() => {
     // Chỉ kiểm tra khi có đúng 2 thẻ chưa completed
-    const activeFlippedCards = flippedCards.filter(card => !card.isCompleted);
+    const activeFlippedCards = flippedCards.filter((card) => !card.isCompleted);
     if (activeFlippedCards.length === 2) {
       setIsChecking(true);
       const [firstCard, secondCard] = activeFlippedCards;
-      
-      setMoves(m => m + 1); // Increment moves for every pair flip
+
+      setMoves((m) => m + 1); // Increment moves for every pair flip
 
       if (firstCard.pairId === secondCard.pairId) {
-        setCards(prev => prev.map(card => card.pairId === firstCard.pairId ? { ...card, isMatched: true } : card));
-        setPlayers(prevPlayers => prevPlayers.map((player, index) => 
-            index === currentPlayerIndex ? { ...player, score: player.score + 1 } : player
-        ));
+        setCards((prev) =>
+          prev.map((card) =>
+            card.pairId === firstCard.pairId
+              ? { ...card, isMatched: true }
+              : card
+          )
+        );
+        setPlayers((prevPlayers) =>
+          prevPlayers.map((player, index) =>
+            index === currentPlayerIndex
+              ? { ...player, score: player.score + 1 }
+              : player
+          )
+        );
         // Xóa cả 2 thẻ khỏi flippedCards (kể cả completed)
-        setFlippedCards(prev => prev.filter(card => card.id !== firstCard.id && card.id !== secondCard.id));
+        setFlippedCards((prev) =>
+          prev.filter(
+            (card) => card.id !== firstCard.id && card.id !== secondCard.id
+          )
+        );
         setIsChecking(false);
         pickRandomChooser();
       } else {
         setTimeout(() => {
-          setCards(prev =>
-            prev.map(card => {
+          setCards((prev) =>
+            prev.map((card) => {
               if (card.id === firstCard.id || card.id === secondCard.id) {
                 // Chỉ úp lại nếu thẻ chưa completed
                 if (!card.isCompleted) {
@@ -341,7 +391,13 @@ const App: React.FC = () => {
             })
           );
           // Chỉ xóa khỏi flippedCards những thẻ chưa completed (giữ lại thẻ đã completed)
-          setFlippedCards(prev => prev.filter(card => card.isCompleted || (card.id !== firstCard.id && card.id !== secondCard.id)));
+          setFlippedCards((prev) =>
+            prev.filter(
+              (card) =>
+                card.isCompleted ||
+                (card.id !== firstCard.id && card.id !== secondCard.id)
+            )
+          );
           setIsChecking(false);
           pickRandomChooser();
         }, 1200);
@@ -350,14 +406,14 @@ const App: React.FC = () => {
   }, [flippedCards, pickRandomChooser, currentPlayerIndex, players]);
 
   useEffect(() => {
-    if (cards.length > 0 && cards.every(card => card.isCompleted)) {
-      setView('finished');
+    if (cards.length > 0 && cards.every((card) => card.isCompleted)) {
+      setView("finished");
     }
   }, [cards]);
 
   const renderFinishedModal = () => {
-    if (view !== 'finished') return null;
-    
+    if (view !== "finished") return null;
+
     const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
     const [first, second, third] = sortedPlayers;
     const podium = sortedPlayers.slice(0, 3);
@@ -369,12 +425,12 @@ const App: React.FC = () => {
         <div className="bg-[#fdf6e3] p-8 rounded-xl shadow-2xl text-center border-4 border-black w-full max-w-2xl space-y-6">
           <div>
             <h2 className="text-3xl font-bold text-green-700 mb-2 uppercase">
-              {winners.length > 1 ? 'Đồng Quán Quân' : 'Chiến Thắng Tuyệt Đối'}
+              {winners.length > 1 ? "Đồng Quán Quân" : "Chiến Thắng Tuyệt Đối"}
             </h2>
             <p className="text-lg text-black">
               {winners.length > 1
-                ? `Người dẫn đầu: ${winners.map((w) => w.name).join(' & ')}`
-                : `Người chiến thắng: ${first?.name ?? 'Chưa xác định'}`}
+                ? `Người dẫn đầu: ${winners.map((w) => w.name).join(" & ")}`
+                : `Người chiến thắng: ${first?.name ?? "Chưa xác định"}`}
             </p>
           </div>
 
@@ -383,19 +439,23 @@ const App: React.FC = () => {
               const rank = index + 1;
               const rankStyles =
                 rank === 1
-                  ? 'bg-yellow-100 border-yellow-400 text-yellow-900'
+                  ? "bg-yellow-100 border-yellow-400 text-yellow-900"
                   : rank === 2
-                  ? 'bg-gray-100 border-gray-400 text-gray-900'
-                  : 'bg-orange-100 border-orange-400 text-orange-900';
+                  ? "bg-gray-100 border-gray-400 text-gray-900"
+                  : "bg-orange-100 border-orange-400 text-orange-900";
               const label = `Top ${rank}`;
               return (
                 <div
                   key={player.id}
                   className={`rounded-2xl border-2 shadow-inner p-4 flex flex-col items-center ${rankStyles}`}
                 >
-                  <span className="text-xs uppercase tracking-widest">{label}</span>
+                  <span className="text-xs uppercase tracking-widest">
+                    {label}
+                  </span>
                   <p className="text-xl font-bold mt-2">{player.name}</p>
-                  <p className="text-sm font-semibold mt-1">{player.score} điểm</p>
+                  <p className="text-sm font-semibold mt-1">
+                    {player.score} điểm
+                  </p>
                 </div>
               );
             })}
@@ -405,7 +465,9 @@ const App: React.FC = () => {
                   key={`empty-${i}`}
                   className="rounded-2xl border-2 border-dashed border-gray-300 p-4 flex flex-col items-center text-gray-400"
                 >
-                  <span className="text-xs uppercase tracking-widest">Top {podium.length + i + 1}</span>
+                  <span className="text-xs uppercase tracking-widest">
+                    Top {podium.length + i + 1}
+                  </span>
                   <p className="text-sm mt-2">Chờ người chơi...</p>
                 </div>
               ))}
@@ -427,48 +489,76 @@ const App: React.FC = () => {
         </div>
       </div>
     );
-  }
+  };
 
   const renderContent = () => {
     switch (view) {
-      case 'menu':
-        return <MainMenu onStartSingle={handleEnterLobby} onShowInstructions={handleShowInstructions} />;
-      case 'lobby':
-        return <Lobby onStartGame={handleStartGame} onReturnToMenu={handleReturnToMenu} isLoading={isLoading} error={error} />;
-      case 'playing':
-      case 'finished':
+      case "menu":
+        return (
+          <MainMenu
+            onStartSingle={handleEnterLobby}
+            onShowInstructions={handleShowInstructions}
+          />
+        );
+      case "lobby":
+        return (
+          <Lobby
+            onStartGame={handleStartGame}
+            onReturnToMenu={handleReturnToMenu}
+            isLoading={isLoading}
+            error={error}
+          />
+        );
+      case "playing":
+      case "finished":
         const currentPlayer = players[currentPlayerIndex];
         return (
           <div className="flex flex-col md:flex-row w-full max-w-7xl mx-auto gap-6 flex-grow">
             {/* Sidebar */}
             <div className="w-full md:w-72 lg:w-80 flex-shrink-0 bg-black/80 p-4 rounded-lg border-2 border-[#c70000] flex flex-col shadow-lg">
-                <Dashboard currentPlayer={currentPlayer} wrongAnswers={wrongAnswers}/>
-                <PlayerList players={players} currentPlayerId={currentPlayer?.id ?? -1} />
-                <div className="mt-auto pt-4 space-y-3">
-                   {view === 'finished' && (
-                     <button
-                        onClick={handleRestartGame}
-                        className="w-full px-6 py-3 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-400 transition-colors duration-300 border-2 border-black"
-                      >
-                        Chơi Lại
-                      </button>
-                   )}
-                   <button
-                    onClick={handleReturnToMenu}
-                    className="w-full px-6 py-3 bg-[#c70000] text-white font-semibold rounded-lg hover:bg-[#a60000] transition-colors duration-300 border-2 border-black"
+              <Dashboard
+                currentPlayer={currentPlayer}
+                wrongAnswers={wrongAnswers}
+              />
+              <PlayerList
+                players={players}
+                currentPlayerId={currentPlayer?.id ?? -1}
+              />
+              <div className="mt-auto pt-4 space-y-3">
+                {view === "finished" && (
+                  <button
+                    onClick={handleRestartGame}
+                    className="w-full px-6 py-3 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-400 transition-colors duration-300 border-2 border-black"
                   >
-                    Về Menu Chính
+                    Chơi Lại
                   </button>
-                </div>
+                )}
+                <button
+                  onClick={handleReturnToMenu}
+                  className="w-full px-6 py-3 bg-[#c70000] text-white font-semibold rounded-lg hover:bg-[#a60000] transition-colors duration-300 border-2 border-black"
+                >
+                  Về Menu Chính
+                </button>
+              </div>
             </div>
             {/* Game Board */}
             <div className="w-full flex-grow flex items-center justify-center">
-                <GameBoard cards={cards} onCardClick={handleCardClick} onRevealCard={handleCardReveal} isDisabled={isChecking} />
+              <GameBoard
+                cards={cards}
+                onCardClick={handleCardClick}
+                onRevealCard={handleCardReveal}
+                isDisabled={isChecking}
+              />
             </div>
           </div>
         );
       default:
-        return <MainMenu onStartSingle={handleEnterLobby} onShowInstructions={handleShowInstructions} />;
+        return (
+          <MainMenu
+            onStartSingle={handleEnterLobby}
+            onShowInstructions={handleShowInstructions}
+          />
+        );
     }
   };
 
@@ -477,16 +567,18 @@ const App: React.FC = () => {
       className="min-h-screen text-slate-100 flex flex-col items-center p-4 sm:p-6 bg-black/80"
       style={{
         backgroundImage: "url('/background/background.jpg')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
       }}
     >
       {quizError && (
         <p className="text-center text-sm text-red-300 mb-2">{quizError}</p>
       )}
       {renderContent()}
-      {view === 'instructions' && <InstructionsModal onClose={handleCloseInstructions} />}
+      {view === "instructions" && (
+        <InstructionsModal onClose={handleCloseInstructions} />
+      )}
       {focusedCard && (
         <CardShowcase
           card={focusedCard.card}
