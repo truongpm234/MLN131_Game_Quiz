@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: backend/Dockerfile
+    container_name: lenincard_backend_prod
+    ports:
+      - "8000:8000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - PYTHONUNBUFFERED=1
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-*} # Default: allow all, Production: set specific domains
+    # Production: Chỉ mount docs, KHÔNG mount code
+    volumes:
+      - ../docs:/app/docs/:ro # Read-only
+    restart: always # Auto restart khi crash
+    networks:
+      - lenincard_network
+    # Resource limits (optional nhưng khuyên dùng)
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+
+networks:
+  lenincard_network:
+    driver: bridge

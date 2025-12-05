@@ -34,5 +34,6 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
     CMD python -c "import requests; requests.get('http://localhost:8000/api/health')" || exit 1
 
 # Command để chạy ứng dụng
-# Sử dụng uvicorn để chạy FastAPI app
-CMD ["uvicorn", "backend.api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# Production: Sử dụng multiple workers để tăng hiệu năng
+# Development: Thay --workers 4 bằng --reload
+CMD ["uvicorn", "backend.api.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
